@@ -1,0 +1,18 @@
+{
+    "trackerApp": {
+        "brand" : {
+            "home": {
+                "title": "Brands",
+                "createLabel": "Create a new brand",
+                "createOrEditLabel": "Create or edit a brand"
+            },
+            "delete": {
+                "question": "Are you sure you want to delete Brand {{ name }}?"
+            },
+            "detail": {
+                "title": "Brand"
+            },
+            "name": "Name"
+        }
+    }
+}

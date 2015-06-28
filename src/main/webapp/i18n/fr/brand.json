@@ -1,0 +1,19 @@
+{
+    "trackerApp": {
+        "brand" : {
+            "home": {
+                "title": "Marques",
+                "createLabel": "Créer une nouvelle marque",
+                "createOrEditLabel": "Créer ou éditer une marque"
+            },
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer la marque {{ name }} ?"
+            },
+            "detail": {
+                "title": "Marque"
+            },
+            "name": "Nom"
+        }
+    }
+}
+
