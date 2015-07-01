@@ -7,6 +7,7 @@
             "entities": {
                 "main": "Management",
                 "brand": "Manage brands",
+                "productType": "Manage product types",
                 "additionalEntity": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

@@ -32,7 +32,7 @@ authentication:
 
 swagger:
     title: tracker API
-    description: tracker application
+    description: tracker applications and beyond!
     termsOfServiceUrl: http://jhipster.github.io/
     contact:
     license: Apache 2.0

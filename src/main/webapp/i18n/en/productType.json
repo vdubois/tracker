@@ -1,0 +1,18 @@
+{
+    "trackerApp": {
+        "productType" : {
+            "home": {
+                "title": "Product types",
+                "createLabel": "Create a new product type",
+                "createOrEditLabel": "Create or edit a product type"
+            },
+            "delete": {
+                "question": "Are you sure you want to delete Product type {{ name }}?"
+            },
+            "detail": {
+                "title": "Product type"
+            },
+            "name": "Name"
+        }
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "trackerApp": {
+        "productType" : {
+            "home": {
+                "title": "Types de produits",
+                "createLabel": "Créer un nouveau type de produit",
+                "createOrEditLabel": "Créer ou éditer un type de produit"
+            },
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le type de produit {{ name }} ?"
+            },
+            "detail": {
+                "title": "Type de produit"
+            },
+            "name": "Nom"
+        }
+    }
+}
+
