@@ -157,4 +157,8 @@ public class UserService {
             userSearchRepository.delete(user);
         }
     }
+
+    public User save(User user) {
+        return userRepository.save(user);
+    }
 }

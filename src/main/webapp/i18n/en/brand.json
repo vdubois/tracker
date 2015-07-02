@@ -7,12 +7,13 @@
                 "createOrEditLabel": "Create or edit a brand"
             },
             "delete": {
-                "question": "Are you sure you want to delete Brand {{ name }}?"
+                "question": "Are you sure you want to delete brand {{ name }}?"
             },
             "detail": {
                 "title": "Brand"
             },
-            "name": "Name"
+            "name": "Name",
+            "user": "User"
         }
     }
 }

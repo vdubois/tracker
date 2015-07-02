@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.github.vdubois.tracker.domain.ProductType;
 import io.github.vdubois.tracker.repository.ProductTypeRepository;
 import io.github.vdubois.tracker.repository.search.ProductTypeSearchRepository;
+import io.github.vdubois.tracker.service.UserService;
 import io.github.vdubois.tracker.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,9 @@ public class ProductTypeResource {
     @Inject
     private ProductTypeSearchRepository productTypeSearchRepository;
 
+    @Inject
+    private UserService userService;
+    
     /**
      * POST  /productTypes -> Create a new productType.
      */
@@ -52,6 +56,7 @@ public class ProductTypeResource {
         if (productType.getId() != null) {
             return ResponseEntity.badRequest().header("Failure", "A new productType cannot already have an ID").build();
         }
+        productType.setUser(userService.getUserWithAuthorities());
         productTypeRepository.save(productType);
         productTypeSearchRepository.save(productType);
         return ResponseEntity.created(new URI("/api/productTypes/" + productType.getId())).build();

@@ -10,4 +10,7 @@ import java.util.List;
  */
 public interface ProductTypeRepository extends JpaRepository<ProductType,Long> {
 
+    @Query("select productType from ProductType productType where productType.user.login = ?#{principal.username}")
+    List<ProductType> findAllForCurrentUser();
+
 }

@@ -7,12 +7,13 @@
                 "createOrEditLabel": "Create or edit a product type"
             },
             "delete": {
-                "question": "Are you sure you want to delete Product type {{ name }}?"
+                "question": "Are you sure you want to delete product type {{ name }}?"
             },
             "detail": {
                 "title": "Product type"
             },
-            "name": "Name"
+            "name": "Name",
+            "user": "User"
         }
     }
 }

@@ -12,7 +12,8 @@
             "detail": {
                 "title": "Type de produit"
             },
-            "name": "Nom"
+            "name": "Nom",
+            "user": "Utilisateur"
         }
     }
 }

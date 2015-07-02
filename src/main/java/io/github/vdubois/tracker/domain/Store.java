@@ -12,13 +12,13 @@ import java.util.Set;
 import java.util.Objects;
 
 /**
- * A ProductType.
+ * A Store.
  */
 @Entity
-@Table(name = "PRODUCTTYPE")
+@Table(name = "STORE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName="producttype")
-public class ProductType implements Serializable {
+@Document(indexName="store")
+public class Store implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,6 +27,9 @@ public class ProductType implements Serializable {
     @NotNull
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "base_dom_selector")
+    private String baseDomSelector;
 
     @ManyToOne
     private User user;
@@ -47,6 +50,14 @@ public class ProductType implements Serializable {
         this.name = name;
     }
 
+    public String getBaseDomSelector() {
+        return baseDomSelector;
+    }
+
+    public void setBaseDomSelector(String baseDomSelector) {
+        this.baseDomSelector = baseDomSelector;
+    }
+
     public User getUser() {
         return user;
     }
@@ -64,9 +75,9 @@ public class ProductType implements Serializable {
             return false;
         }
 
-        ProductType productType = (ProductType) o;
+        Store store = (Store) o;
 
-        if ( ! Objects.equals(id, productType.id)) return false;
+        if ( ! Objects.equals(id, store.id)) return false;
 
         return true;
     }
@@ -78,9 +89,10 @@ public class ProductType implements Serializable {
 
     @Override
     public String toString() {
-        return "ProductType{" +
+        return "Store{" +
                 "id=" + id +
                 ", name='" + name + "'" +
+                ", baseDomSelector='" + baseDomSelector + "'" +
                 '}';
     }
 }

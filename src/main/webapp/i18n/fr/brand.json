@@ -12,7 +12,8 @@
             "detail": {
                 "title": "Marque"
             },
-            "name": "Nom"
+            "name": "Nom",
+            "user": "Utilisateur"
         }
     }
 }

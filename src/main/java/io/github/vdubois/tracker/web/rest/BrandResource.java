@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.github.vdubois.tracker.domain.Brand;
 import io.github.vdubois.tracker.repository.BrandRepository;
 import io.github.vdubois.tracker.repository.search.BrandSearchRepository;
+import io.github.vdubois.tracker.service.UserService;
 import io.github.vdubois.tracker.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,9 @@ public class BrandResource {
     @Inject
     private BrandSearchRepository brandSearchRepository;
 
+    @Inject
+    private UserService userService;
+    
     /**
      * POST  /brands -> Create a new brand.
      */
@@ -52,6 +56,7 @@ public class BrandResource {
         if (brand.getId() != null) {
             return ResponseEntity.badRequest().header("Failure", "A new brand cannot already have an ID").build();
         }
+        brand.setUser(userService.getUserWithAuthorities());
         brandRepository.save(brand);
         brandSearchRepository.save(brand);
         return ResponseEntity.created(new URI("/api/brands/" + brand.getId())).build();

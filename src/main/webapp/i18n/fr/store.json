@@ -1,0 +1,21 @@
+{
+    "trackerApp": {
+        "store" : {
+            "home": {
+                "title": "Enseignes",
+                "createLabel": "Créer une nouvelle enseigne",
+                "createOrEditLabel": "Créer ou éditer une enseigne"
+            },
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer l'enseigne {{ name }} ?"
+            },
+            "detail": {
+                "title": "Enseigne"
+            },
+            "name": "Nom",
+            "baseDomSelector": "Sélecteur DOM de base",
+            "user": "Utilisateur"
+        }
+    }
+}
+

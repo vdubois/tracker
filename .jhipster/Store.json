@@ -23,6 +23,15 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "baseDomSelector",
+            "fieldType": "String",
+            "fieldNameCapitalized": "BaseDomSelector",
+            "fieldNameUnderscored": "base_dom_selector",
+            "fieldInJavaBeanMethod": "BaseDomSelector",
+            "fieldValidate": false
         }
     ],
     "fieldsContainOwnerManyToMany": false,
@@ -33,7 +42,7 @@
     "fieldsContainBigDecimal": false,
     "fieldsContainDateTime": false,
     "fieldsContainDate": false,
-    "changelogDate": "20150702055423",
+    "changelogDate": "20150702060437",
     "dto": "no",
     "pagination": "infinite-scroll",
     "validation": true

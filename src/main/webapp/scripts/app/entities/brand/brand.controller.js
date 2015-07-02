@@ -1,14 +1,22 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('BrandController', function ($scope, Brand, BrandSearch, ParseLinks) {
+    .controller('BrandController', function ($scope, Brand, User, BrandSearch, ParseLinks) {
         $scope.brands = [];
+        $scope.users = User.query();
         $scope.page = 1;
         $scope.loadAll = function() {
             Brand.query({page: $scope.page, per_page: 20}, function(result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
-                $scope.brands = result;
+                for (var i = 0; i < result.length; i++) {
+                    $scope.brands.push(result[i]);
+                }
             });
+        };
+        $scope.reset = function() {
+            $scope.page = 1;
+            $scope.brands = [];
+            $scope.loadAll();
         };
         $scope.loadPage = function(page) {
             $scope.page = page;
@@ -47,7 +55,7 @@ angular.module('trackerApp')
         $scope.confirmDelete = function (id) {
             Brand.delete({id: id},
                 function () {
-                    $scope.loadAll();
+                    $scope.reset();
                     $('#deleteBrandConfirmation').modal('hide');
                     $scope.clear();
                 });
@@ -64,7 +72,7 @@ angular.module('trackerApp')
         };
 
         $scope.refresh = function () {
-            $scope.loadAll();
+            $scope.reset();
             $('#saveBrandModal').modal('hide');
             $scope.clear();
         };

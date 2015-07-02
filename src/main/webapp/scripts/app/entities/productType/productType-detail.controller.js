@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('ProductTypeDetailController', function ($scope, $stateParams, ProductType) {
+    .controller('ProductTypeDetailController', function ($scope, $stateParams, ProductType, User) {
         $scope.productType = {};
         $scope.load = function (id) {
             ProductType.get({id: id}, function(result) {

@@ -10,4 +10,7 @@ import java.util.List;
  */
 public interface BrandRepository extends JpaRepository<Brand,Long> {
 
+    @Query("select brand from Brand brand where brand.user.login = ?#{principal.username}")
+    List<Brand> findAllForCurrentUser();
+
 }

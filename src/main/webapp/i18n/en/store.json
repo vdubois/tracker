@@ -1,0 +1,20 @@
+{
+    "trackerApp": {
+        "store" : {
+            "home": {
+                "title": "Stores",
+                "createLabel": "Create a new store",
+                "createOrEditLabel": "Create or edit a store"
+            },
+            "delete": {
+                "question": "Are you sure you want to delete store {{ name }}?"
+            },
+            "detail": {
+                "title": "Store"
+            },
+            "name": "Name",
+            "baseDomSelector": "Base DOM selector",
+            "user": "User"
+        }
+    }
+}
