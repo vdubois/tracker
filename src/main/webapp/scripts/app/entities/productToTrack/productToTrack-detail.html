@@ -1,0 +1,86 @@
+
+<div>
+    <h2><span translate="trackerApp.productToTrack.detail.title">ProductToTrack</span> {{productToTrack.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th translate="entity.detail.field">Field</th>
+                    <th translate="entity.detail.value">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span translate="trackerApp.productToTrack.name">Name</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{productToTrack.name}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="trackerApp.productToTrack.trackingUrl">TrackingUrl</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{productToTrack.trackingUrl}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="trackerApp.productToTrack.trackingDomSelector">TrackingDomSelector</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{productToTrack.trackingDomSelector}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="trackerApp.productToTrack.lastKnownPrice">LastKnownPrice</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{productToTrack.lastKnownPrice}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="trackerApp.productToTrack.user">user</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{productToTrack.user.login}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="trackerApp.productToTrack.productType">productType</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{productToTrack.productType.name}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="trackerApp.productToTrack.brand">brand</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{productToTrack.brand.name}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="trackerApp.productToTrack.store">store</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{productToTrack.store.name}}" readonly>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            ui-sref="productToTrack"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

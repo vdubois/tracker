@@ -1,0 +1,110 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "user",
+            "relationshipNameCapitalized": "User",
+            "relationshipFieldName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "User",
+            "otherEntityField": "login"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "productType",
+            "relationshipNameCapitalized": "ProductType",
+            "relationshipFieldName": "productType",
+            "otherEntityName": "productType",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "ProductType",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipId": 3,
+            "relationshipName": "brand",
+            "relationshipNameCapitalized": "Brand",
+            "relationshipFieldName": "brand",
+            "otherEntityName": "brand",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "Brand",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipId": 4,
+            "relationshipName": "store",
+            "relationshipNameCapitalized": "Store",
+            "relationshipFieldName": "store",
+            "otherEntityName": "store",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "Store",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipId": 5,
+            "relationshipName": "prices",
+            "relationshipNameCapitalized": "Prices",
+            "relationshipFieldName": "prices",
+            "otherEntityName": "price",
+            "relationshipType": "one-to-many",
+            "otherEntityNameCapitalized": "Price",
+            "otherEntityRelationshipName": "productToTrack"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldNameCapitalized": "Name",
+            "fieldNameUnderscored": "name",
+            "fieldInJavaBeanMethod": "Name",
+            "fieldValidate": true,
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "trackingUrl",
+            "fieldType": "String",
+            "fieldNameCapitalized": "TrackingUrl",
+            "fieldNameUnderscored": "tracking_url",
+            "fieldInJavaBeanMethod": "TrackingUrl",
+            "fieldValidate": true,
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "trackingDomSelector",
+            "fieldType": "String",
+            "fieldNameCapitalized": "TrackingDomSelector",
+            "fieldNameUnderscored": "tracking_dom_selector",
+            "fieldInJavaBeanMethod": "TrackingDomSelector",
+            "fieldValidate": false
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "lastKnownPrice",
+            "fieldType": "BigDecimal",
+            "fieldNameCapitalized": "LastKnownPrice",
+            "fieldNameUnderscored": "last_known_price",
+            "fieldInJavaBeanMethod": "LastKnownPrice",
+            "fieldValidate": false
+        }
+    ],
+    "fieldsContainOwnerManyToMany": false,
+    "fieldsContainOwnerOneToOne": false,
+    "fieldsContainOneToMany": true,
+    "fieldsContainLocalDate": false,
+    "fieldsContainCustomTime": false,
+    "fieldsContainBigDecimal": true,
+    "fieldsContainDateTime": false,
+    "fieldsContainDate": false,
+    "changelogDate": "20150708070143",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "validation": true
+}

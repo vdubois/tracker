@@ -1,0 +1,27 @@
+{
+    "trackerApp": {
+        "productToTrack" : {
+            "home": {
+                "title": "Produits à suivre",
+                "createLabel": "Créer un nouveau produit à suivre",
+                "createOrEditLabel": "Créer ou éditer un produit à suivre"
+            },
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le produit à suivre {{ name }} ?"
+            },
+            "detail": {
+                "title": "Produit à suivre"
+            },
+            "name": "Name",
+            "trackingUrl": "URL de suivi",
+            "trackingDomSelector": "Sélecteur DOM",
+            "lastKnownPrice": "Dernier prix",
+            "user": "Utilisateur",
+            "productType": "Type de produit",
+            "brand": "Marque",
+            "store": "Enseigne",
+            "prices": "Prix"
+        }
+    }
+}
+

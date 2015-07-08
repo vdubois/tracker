@@ -1,0 +1,20 @@
+{
+    "trackerApp": {
+        "price" : {
+            "home": {
+                "title": "Prices",
+                "createLabel": "Create a new Price",
+                "createOrEditLabel": "Create or edit a Price"
+            },
+            "delete": {
+                "question": "Are you sure you want to delete Price {{ id }}?"
+            },
+            "detail": {
+                "title": "Price"
+            },
+            "value": "Value",
+            "createdAt": "CreatedAt",
+            "productToTrack": "productToTrack"
+        }
+    }
+}

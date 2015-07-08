@@ -1,0 +1,26 @@
+{
+    "trackerApp": {
+        "productToTrack" : {
+            "home": {
+                "title": "Products to track",
+                "createLabel": "Create a new product to track",
+                "createOrEditLabel": "Create or edit a product to track"
+            },
+            "delete": {
+                "question": "Are you sure you want to delete product to track {{ name }}?"
+            },
+            "detail": {
+                "title": "Product to track"
+            },
+            "name": "Name",
+            "trackingUrl": "Tracking URL",
+            "trackingDomSelector": "Tracking DOM Selector",
+            "lastKnownPrice": "Last known price",
+            "user": "User",
+            "productType": "Product type",
+            "brand": "Brand",
+            "store": "Store",
+            "prices": "Prices"
+        }
+    }
+}

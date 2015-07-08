@@ -1,0 +1,46 @@
+
+<div>
+    <h2><span translate="trackerApp.price.detail.title">Price</span> {{price.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th translate="entity.detail.field">Field</th>
+                    <th translate="entity.detail.value">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span translate="trackerApp.price.value">Value</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{price.value}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="trackerApp.price.createdAt">CreatedAt</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{price.createdAt}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="trackerApp.price.productToTrack">productToTrack</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{price.productToTrack.name}}" readonly>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            ui-sref="price"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

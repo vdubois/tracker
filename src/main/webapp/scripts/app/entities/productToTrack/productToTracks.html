@@ -1,0 +1,186 @@
+<div>
+
+    <h2 translate="trackerApp.productToTrack.home.title">ProductToTracks</h2>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#saveProductToTrackModal" ng-click="clear()">
+                    <span class="glyphicon glyphicon-flash"></span> <span translate="trackerApp.productToTrack.home.createLabel">Create a new ProductToTrack</span>
+                </button>
+            </div>
+            <div class="col-md-8">
+                <form name="searchForm" class="form-inline">
+                    <div class="form-group">
+                        <input type="text" class="form-control" ng-model="searchQuery" id="searchQuery" placeholder="query">
+                    </div>
+                    <button class="btn btn-info" ng-click="search()"><span class="glyphicon glyphicon-search"></span> <span>Search a ProductToTrack</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="saveProductToTrackModal" tabindex="-1" role="dialog" aria-labelledby="myProductToTrackLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="editForm" role="form" novalidate ng-submit="save()" show-validation>
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" id="myProductToTrackLabel" translate="trackerApp.productToTrack.home.createOrEditLabel">Create or edit a ProductToTrack</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>ID</label>
+                            <input type="text" class="form-control" name="id"
+                                   ng-model="productToTrack.id" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label translate="trackerApp.productToTrack.name">Name</label>
+                            <input type="text" class="form-control" name="name"
+                                   ng-model="productToTrack.name" required>
+
+                            <div ng-show="editForm.name.$invalid">
+                                <p class="help-block"
+                                   ng-show="editForm.name.$error.required" translate="entity.validation.required">
+                                    This field is required.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label translate="trackerApp.productToTrack.trackingUrl">TrackingUrl</label>
+                            <input type="text" class="form-control" name="trackingUrl"
+                                   ng-model="productToTrack.trackingUrl" required>
+
+                            <div ng-show="editForm.trackingUrl.$invalid">
+                                <p class="help-block"
+                                   ng-show="editForm.trackingUrl.$error.required" translate="entity.validation.required">
+                                    This field is required.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label translate="trackerApp.productToTrack.trackingDomSelector">TrackingDomSelector</label>
+                            <input type="text" class="form-control" name="trackingDomSelector"
+                                   ng-model="productToTrack.trackingDomSelector">
+
+                        </div>
+                        <div class="form-group">
+                            <label translate="trackerApp.productToTrack.lastKnownPrice">LastKnownPrice</label>
+                            <input type="number" class="form-control" name="lastKnownPrice"
+                                   ng-model="productToTrack.lastKnownPrice">
+
+                        </div>
+
+                        <div class="form-group">
+                            <label translate="trackerApp.productToTrack.user">user</label>
+                            <select class="form-control" name="user" ng-model="productToTrack.user.id" ng-options="user.id as user.login for user in users">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label translate="trackerApp.productToTrack.productType">productType</label>
+                            <select class="form-control" name="productType" ng-model="productToTrack.productType.id" ng-options="productType.id as productType.name for productType in producttypes">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label translate="trackerApp.productToTrack.brand">brand</label>
+                            <select class="form-control" name="brand" ng-model="productToTrack.brand.id" ng-options="brand.id as brand.name for brand in brands">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label translate="trackerApp.productToTrack.store">store</label>
+                            <select class="form-control" name="store" ng-model="productToTrack.store.id" ng-options="store.id as store.name for store in stores">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+                        </button>
+                        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteProductToTrackConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="deleteForm" ng-submit="confirmDelete(productToTrack.id)">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" translate="entity.delete.title">Confirm delete operation</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p translate="trackerApp.productToTrack.delete.question" translate-values="{id: '{{productToTrack.id}}'}">Are you sure you want to delete this ProductToTrack?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+                        </button>
+                        <button type="submit" ng-disabled="deleteForm.$invalid" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th translate="trackerApp.productToTrack.name">Name</th>
+                    <th translate="trackerApp.productToTrack.trackingUrl">TrackingUrl</th>
+                    <th translate="trackerApp.productToTrack.trackingDomSelector">TrackingDomSelector</th>
+                    <th translate="trackerApp.productToTrack.lastKnownPrice">LastKnownPrice</th>
+                    <th translate="trackerApp.productToTrack.user">user</th>
+                    <th translate="trackerApp.productToTrack.productType">productType</th>
+                    <th translate="trackerApp.productToTrack.brand">brand</th>
+                    <th translate="trackerApp.productToTrack.store">store</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody infinite-scroll="loadPage(page + 1)" infinite-scroll-disabled="links['last'] == page">
+                <tr ng-repeat="productToTrack in productToTracks">
+                    <td><a ui-sref="productToTrackDetail({id:productToTrack.id})">{{productToTrack.id}}</a></td>
+                    <td>{{productToTrack.name}}</td>
+                    <td>{{productToTrack.trackingUrl}}</td>
+                    <td>{{productToTrack.trackingDomSelector}}</td>
+                    <td>{{productToTrack.lastKnownPrice}}</td>
+                    <td>{{productToTrack.user.login}}</td>
+                    <td>{{productToTrack.productType.name}}</td>
+                    <td>{{productToTrack.brand.name}}</td>
+                    <td>{{productToTrack.store.name}}</td>
+                    <td>
+                        <button type="submit"
+                                ui-sref="productToTrackDetail({id:productToTrack.id})"
+                                class="btn btn-info btn-sm">
+                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span translate="entity.action.view"> View</span>
+                        </button>
+                        <button type="submit"
+                                ng-click="showUpdate(productToTrack.id)"
+                                class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span translate="entity.action.edit"> Edit</span>
+                        </button>
+                        <button type="submit"
+                                ng-click="delete(productToTrack.id)"
+                                class="btn btn-danger btn-sm">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete"> Delete</span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

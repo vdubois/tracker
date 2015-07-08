@@ -1,0 +1,52 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "productToTrack",
+            "relationshipNameCapitalized": "ProductToTrack",
+            "relationshipFieldName": "productToTrack",
+            "otherEntityName": "productToTrack",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "ProductToTrack",
+            "otherEntityField": "name"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "value",
+            "fieldType": "BigDecimal",
+            "fieldNameCapitalized": "Value",
+            "fieldNameUnderscored": "value",
+            "fieldInJavaBeanMethod": "Value",
+            "fieldValidate": true,
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "createdAt",
+            "fieldType": "DateTime",
+            "fieldNameCapitalized": "CreatedAt",
+            "fieldNameUnderscored": "created_at",
+            "fieldInJavaBeanMethod": "CreatedAt",
+            "fieldValidate": true,
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "fieldsContainOwnerManyToMany": false,
+    "fieldsContainOwnerOneToOne": false,
+    "fieldsContainOneToMany": false,
+    "fieldsContainLocalDate": false,
+    "fieldsContainCustomTime": true,
+    "fieldsContainBigDecimal": true,
+    "fieldsContainDateTime": true,
+    "fieldsContainDate": false,
+    "changelogDate": "20150708070501",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "validation": true
+}

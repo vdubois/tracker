@@ -9,6 +9,8 @@
                 "brand": "Manage brands",
                 "productType": "Manage product types",
                 "store": "Manage stores",
+                "productToTrack": "Products to track",
+                "price": "Price",
                 "additionalEntity": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
