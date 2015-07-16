@@ -3,8 +3,8 @@
         "productToTrack" : {
             "home": {
                 "title": "Produits à suivre",
-                "createLabel": "Créer un nouveau produit à suivre",
-                "createOrEditLabel": "Créer ou éditer un produit à suivre"
+                "createLabel": "Ajouter un produit à suivre",
+                "createOrEditLabel": "Ajouter ou éditer un produit à suivre"
             },
             "delete": {
                 "question": "Etes-vous certain de vouloir supprimer le produit à suivre {{ name }} ?"
@@ -12,7 +12,7 @@
             "detail": {
                 "title": "Produit à suivre"
             },
-            "name": "Name",
+            "name": "Nom",
             "trackingUrl": "URL de suivi",
             "trackingDomSelector": "Sélecteur DOM",
             "lastKnownPrice": "Dernier prix",

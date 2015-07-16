@@ -12,9 +12,9 @@
             <div class="col-md-8">
                 <form name="searchForm" class="form-inline">
                     <div class="form-group">
-                        <input type="text" class="form-control" ng-model="searchQuery" id="searchQuery" placeholder="query">
+                        <input type="text" class="form-control" ng-model="searchQuery" id="searchQuery" placeholder="Recherche">
                     </div>
-                    <button class="btn btn-info" ng-click="search()"><span class="glyphicon glyphicon-search"></span> <span>Search a ProductToTrack</span>
+                    <button class="btn btn-info" ng-click="search()"><span class="glyphicon glyphicon-search"></span> <span>Rechercher un produit à suivre</span>
                     </button>
                 </form>
             </div>
@@ -33,11 +33,8 @@
                         <h4 class="modal-title" id="myProductToTrackLabel" translate="trackerApp.productToTrack.home.createOrEditLabel">Create or edit a ProductToTrack</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label>ID</label>
-                            <input type="text" class="form-control" name="id"
-                                   ng-model="productToTrack.id" readonly>
-                        </div>
+                        <input type="hidden" class="form-control" name="id"
+                               ng-model="productToTrack.id" readonly>
 
                         <div class="form-group">
                             <label translate="trackerApp.productToTrack.name">Name</label>
@@ -68,18 +65,6 @@
                             <input type="text" class="form-control" name="trackingDomSelector"
                                    ng-model="productToTrack.trackingDomSelector">
 
-                        </div>
-                        <div class="form-group">
-                            <label translate="trackerApp.productToTrack.lastKnownPrice">LastKnownPrice</label>
-                            <input type="number" class="form-control" name="lastKnownPrice"
-                                   ng-model="productToTrack.lastKnownPrice">
-
-                        </div>
-
-                        <div class="form-group">
-                            <label translate="trackerApp.productToTrack.user">user</label>
-                            <select class="form-control" name="user" ng-model="productToTrack.user.id" ng-options="user.id as user.login for user in users">
-                            </select>
                         </div>
                         <div class="form-group">
                             <label translate="trackerApp.productToTrack.productType">productType</label>
@@ -139,12 +124,9 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th translate="trackerApp.productToTrack.name">Name</th>
                     <th translate="trackerApp.productToTrack.trackingUrl">TrackingUrl</th>
-                    <th translate="trackerApp.productToTrack.trackingDomSelector">TrackingDomSelector</th>
                     <th translate="trackerApp.productToTrack.lastKnownPrice">LastKnownPrice</th>
-                    <th translate="trackerApp.productToTrack.user">user</th>
                     <th translate="trackerApp.productToTrack.productType">productType</th>
                     <th translate="trackerApp.productToTrack.brand">brand</th>
                     <th translate="trackerApp.productToTrack.store">store</th>
@@ -153,12 +135,9 @@
             </thead>
             <tbody infinite-scroll="loadPage(page + 1)" infinite-scroll-disabled="links['last'] == page">
                 <tr ng-repeat="productToTrack in productToTracks">
-                    <td><a ui-sref="productToTrackDetail({id:productToTrack.id})">{{productToTrack.id}}</a></td>
                     <td>{{productToTrack.name}}</td>
-                    <td>{{productToTrack.trackingUrl}}</td>
-                    <td>{{productToTrack.trackingDomSelector}}</td>
+                    <td style="width: 200px;overflow-x:hidden;word-wrap: break-word;overflow-y: hidden;">{{productToTrack.trackingUrl}}</td>
                     <td>{{productToTrack.lastKnownPrice}}</td>
-                    <td>{{productToTrack.user.login}}</td>
                     <td>{{productToTrack.productType.name}}</td>
                     <td>{{productToTrack.brand.name}}</td>
                     <td>{{productToTrack.store.name}}</td>

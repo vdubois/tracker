@@ -4,7 +4,12 @@ import com.codahale.metrics.annotation.Timed;
 import io.github.vdubois.tracker.domain.ProductToTrack;
 import io.github.vdubois.tracker.repository.ProductToTrackRepository;
 import io.github.vdubois.tracker.repository.search.ProductToTrackSearchRepository;
+import io.github.vdubois.tracker.service.UserService;
 import io.github.vdubois.tracker.web.rest.util.PaginationUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -40,6 +47,9 @@ public class ProductToTrackResource {
     @Inject
     private ProductToTrackSearchRepository productToTrackSearchRepository;
 
+    @Inject
+    private UserService userService;
+    
     /**
      * POST  /productToTracks -> Create a new productToTrack.
      */
@@ -51,6 +61,18 @@ public class ProductToTrackResource {
         log.debug("REST request to save ProductToTrack : {}", productToTrack);
         if (productToTrack.getId() != null) {
             return ResponseEntity.badRequest().header("Failure", "A new productToTrack cannot already have an ID").build();
+        }
+        productToTrack.setUser(userService.getUserWithAuthorities());
+        if (StringUtils.isNotEmpty(productToTrack.getTrackingDomSelector())) {
+            try {
+                Document doc = Jsoup.connect(productToTrack.getTrackingUrl()).get();
+                Elements priceElements = doc.select(productToTrack.getTrackingDomSelector());
+                String priceAsText = priceElements.get(0).text();
+                priceAsText = priceAsText.replaceAll("€", ".");
+                productToTrack.setLastKnownPrice(new BigDecimal(priceAsText));
+            } catch (IOException ioException) {
+                log.error(ioException.getMessage(), ioException);
+            }
         }
         productToTrackRepository.save(productToTrack);
         productToTrackSearchRepository.save(productToTrack);
