@@ -40,11 +40,17 @@ angular.module('trackerApp')
                 ProductToTrack.update($scope.productToTrack,
                     function () {
                         $scope.refresh();
+                    },
+                    function () {
+                        alert("Le sélecteur que vous avez saisi n'est pas approprié. Veuillez le modifier.");
                     });
             } else {
                 ProductToTrack.save($scope.productToTrack,
                     function () {
                         $scope.refresh();
+                    },
+                    function () {
+                        alert("Le sélecteur que vous avez saisi n'est pas approprié. Veuillez le modifier.");
                     });
             }
         };

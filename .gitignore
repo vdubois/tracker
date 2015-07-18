@@ -123,3 +123,6 @@ Desktop.ini
 !gradle/wrapper/gradle-wrapper.jar
 
 data/elasticsearch
+
+# H2
+src/main/resources/.h2.server.properties

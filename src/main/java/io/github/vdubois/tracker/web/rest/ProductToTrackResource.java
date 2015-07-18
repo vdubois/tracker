@@ -1,12 +1,16 @@
 package io.github.vdubois.tracker.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.github.vdubois.tracker.domain.Price;
 import io.github.vdubois.tracker.domain.ProductToTrack;
+import io.github.vdubois.tracker.repository.PriceRepository;
 import io.github.vdubois.tracker.repository.ProductToTrackRepository;
 import io.github.vdubois.tracker.repository.search.ProductToTrackSearchRepository;
+import io.github.vdubois.tracker.service.PriceService;
 import io.github.vdubois.tracker.service.UserService;
 import io.github.vdubois.tracker.web.rest.util.PaginationUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -49,6 +53,12 @@ public class ProductToTrackResource {
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private PriceRepository priceRepository;
+
+    @Inject
+    private PriceService priceService;
     
     /**
      * POST  /productToTracks -> Create a new productToTrack.
@@ -57,25 +67,17 @@ public class ProductToTrackResource {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Void> create(@Valid @RequestBody ProductToTrack productToTrack) throws URISyntaxException {
+    public ResponseEntity<Void> create(@Valid @RequestBody ProductToTrack productToTrack) throws URISyntaxException, IOException {
         log.debug("REST request to save ProductToTrack : {}", productToTrack);
         if (productToTrack.getId() != null) {
             return ResponseEntity.badRequest().header("Failure", "A new productToTrack cannot already have an ID").build();
         }
         productToTrack.setUser(userService.getUserWithAuthorities());
-        if (StringUtils.isNotEmpty(productToTrack.getTrackingDomSelector())) {
-            try {
-                Document doc = Jsoup.connect(productToTrack.getTrackingUrl()).get();
-                Elements priceElements = doc.select(productToTrack.getTrackingDomSelector());
-                String priceAsText = priceElements.get(0).text();
-                priceAsText = priceAsText.replaceAll("€", ".");
-                productToTrack.setLastKnownPrice(new BigDecimal(priceAsText));
-            } catch (IOException ioException) {
-                log.error(ioException.getMessage(), ioException);
-            }
-        }
+        productToTrack.setLastKnownPrice(
+                priceService.extractPriceFromURLWithDOMSelectorIfFilled(productToTrack));
         productToTrackRepository.save(productToTrack);
         productToTrackSearchRepository.save(productToTrack);
+        priceService.recordPriceForProductToTrack(productToTrack);
         return ResponseEntity.created(new URI("/api/productToTracks/" + productToTrack.getId())).build();
     }
 
@@ -86,13 +88,16 @@ public class ProductToTrackResource {
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Void> update(@Valid @RequestBody ProductToTrack productToTrack) throws URISyntaxException {
+    public ResponseEntity<Void> update(@Valid @RequestBody ProductToTrack productToTrack) throws URISyntaxException, IOException {
         log.debug("REST request to update ProductToTrack : {}", productToTrack);
         if (productToTrack.getId() == null) {
             return create(productToTrack);
         }
+        productToTrack.setLastKnownPrice(
+                priceService.extractPriceFromURLWithDOMSelectorIfFilled(productToTrack));
         productToTrackRepository.save(productToTrack);
         productToTrackSearchRepository.save(productToTrack);
+        priceService.recordPriceForProductToTrack(productToTrack);
         return ResponseEntity.ok().build();
     }
 
