@@ -6,6 +6,7 @@
             "home": "Home",
             "entities": {
                 "main": "Management",
+                "pricesevolution": "Prices evolution",
                 "brand": "Manage brands",
                 "productType": "Manage product types",
                 "store": "Manage stores",

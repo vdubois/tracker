@@ -29,6 +29,7 @@ public class RefreshPricesTasklet implements Tasklet {
             productToTrack.setLastKnownPrice(priceService.extractPriceFromURLWithDOMSelectorIfFilled(productToTrack));
             priceService.recordPriceForProductToTrack(productToTrack); 
         }
-        return RepeatStatus.FINISHED;
+        return null;
     }
+
 }

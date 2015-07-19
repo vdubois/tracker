@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('trackerApp', ['LocalStorageModule', 'tmh.dynamicLocale', 'pascalprecht.translate', 
-    'ngResource', 'ui.router', 'ngCookies', 'ngCacheBuster', 'infinite-scroll'])
+    'ngResource', 'ui.router', 'ngCookies', 'ngCacheBuster', 'infinite-scroll', 'n3-line-chart'])
 
     .run(function ($rootScope, $location, $window, $http, $state, $translate, Language, Auth, Principal, ENV, VERSION) {
         $rootScope.ENV = ENV;

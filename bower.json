@@ -21,7 +21,10 @@
     "angular-local-storage": "http://github.com/grevory/angular-local-storage.git#0.2.0",
     "swagger-ui": "http://github.com/wordnik/swagger-ui.git#2.0.24",
     "angular-cache-buster": "http://github.com/saintmac/angular-cache-buster.git#0.4.3",
-    "ngInfiniteScroll": "http://github.com/sroze/ngInfiniteScroll.git#1.2.0"
+    "ngInfiniteScroll": "http://github.com/sroze/ngInfiniteScroll.git#1.2.0", 
+    "n3-line-charts": "http://github.com/n3-charts/line-chart.git#1.1.10",
+    "d3": "http://github.com/mbostock/d3.git#v3.5.6",
+    "moment": "http://github.com/moment/moment.git#2.10.3"
   },
   "devDependencies": {
     "angular-mocks": "http://github.com/angular/bower-angular-mocks.git#1.4.0",
