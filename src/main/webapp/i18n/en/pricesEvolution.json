@@ -3,7 +3,8 @@
     "pricesEvolution" : {
       "home": {
         "title": "Prices evolution"
-      }
+      },
+      "displayFor": "Display prices evolutions for :"
     }
   }
 }

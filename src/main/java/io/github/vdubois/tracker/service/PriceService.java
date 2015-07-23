@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by vdubois on 18/07/15.
@@ -84,5 +85,10 @@ public class PriceService {
                 | JobParametersInvalidException | JobRestartException jobExecutionAlreadyRunningException) {
             log.severe(ExceptionUtils.getRootCauseMessage(jobExecutionAlreadyRunningException));
         }
+    }
+
+    public void findAllPricesEvolutionsForProductToTrack(ProductToTrack productToTrack) {
+        List<Price> pricesForProductToTrack = priceRepository.findAllByProductToTrack(productToTrack);
+        log.fine(pricesForProductToTrack.toString());
     }
 }

@@ -2,11 +2,25 @@
 
     <h2 translate="trackerApp.pricesEvolution.home.title">Prices evolution</h2>
 
-    <div class="container">
-        <div class="row">
-            <div class="container">
-                <linechart data="data" options="options" mode="" width="" height=""></linechart>
+    <div class="col-lg-12">
+        <form class="form-horizontal" role="form">
+            <div class="form-group" style="width: 600px;">
+                <label for="productToTrackSelector" class="col-sm-6 control-label" translate="trackerApp.pricesEvolution.displayFor">Display prices evolutions for :</label>
+                <div class="col-sm-6">
+                    <select id="productToTrackSelector" class="form-control" ng-model="productToTrack" ng-options="productToTrack.name for productToTrack in productsToTrack" ng-change="loadGraphDataForProductToTrack(productToTrack.id)">
+                    </select>
+                </div>
             </div>
+        </form>
+    </div>
+    
+    <div class="container" ng-show="showChart">
+        <div class="row">
+            <linechart data="data" options="options" mode="" width="" height=""></linechart>
+        </div>
+    </div>
+    <div class="container" ng-hide="showChart">
+        <div class="row">
         </div>
     </div>
 </div>
