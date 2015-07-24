@@ -1,6 +1,7 @@
 package io.github.vdubois.tracker.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.github.vdubois.tracker.domain.Point;
 import io.github.vdubois.tracker.domain.ProductToTrack;
 import io.github.vdubois.tracker.repository.ProductToTrackRepository;
 import io.github.vdubois.tracker.service.PriceService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Created by vdubois on 22/07/15.
@@ -29,9 +31,9 @@ public class PricesEvolutionResource {
             method = RequestMethod.GET, 
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public String find(@PathVariable Long productToTrackId) {
+    public List<Point> find(@PathVariable Long productToTrackId) {
         ProductToTrack productToTrack = productToTrackRepository.findOne(productToTrackId);
-        priceService.findAllPricesEvolutionsForProductToTrack(productToTrack);
-        return "[{\"x\": \"2015-06-19T14:35:15.725Z\", \"val0\": \"300\"}]";
+        List<Point> graphData = priceService.findAllPricesEvolutionsForProductToTrack(productToTrack);
+        return graphData;
     }
 }

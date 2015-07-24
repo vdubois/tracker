@@ -1,5 +1,6 @@
 package io.github.vdubois.tracker.service;
 
+import io.github.vdubois.tracker.domain.Point;
 import io.github.vdubois.tracker.domain.Price;
 import io.github.vdubois.tracker.domain.ProductToTrack;
 import io.github.vdubois.tracker.repository.PriceRepository;
@@ -24,7 +25,10 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by vdubois on 18/07/15.
@@ -87,8 +91,19 @@ public class PriceService {
         }
     }
 
-    public void findAllPricesEvolutionsForProductToTrack(ProductToTrack productToTrack) {
+    public List<Point> findAllPricesEvolutionsForProductToTrack(ProductToTrack productToTrack) {
         List<Price> pricesForProductToTrack = priceRepository.findAllByProductToTrack(productToTrack);
-        log.fine(pricesForProductToTrack.toString());
+        List<Point> graphData = pricesForProductToTrack
+                .stream()
+                .sorted(Comparator.comparing(Price::getCreatedAt))
+                .map(price -> {
+                    Point point = new Point();
+                    point.setDate(price.getCreatedAt().toString());
+                    point.setValue(price.getValue().toString());
+                    return point;
+                })
+                .collect(Collectors.toList());
+        log.fine(graphData.toString());
+        return graphData;
     }
 }
