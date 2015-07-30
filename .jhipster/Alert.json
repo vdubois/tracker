@@ -1,0 +1,40 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "productToTrack",
+            "relationshipNameCapitalized": "ProductToTrack",
+            "relationshipFieldName": "productToTrack",
+            "otherEntityName": "productToTrack",
+            "relationshipType": "one-to-one",
+            "otherEntityNameCapitalized": "ProductToTrack",
+            "ownerSide": true
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "priceLowerThan",
+            "fieldType": "BigDecimal",
+            "fieldNameCapitalized": "PriceLowerThan",
+            "fieldNameUnderscored": "price_lower_than",
+            "fieldInJavaBeanMethod": "PriceLowerThan",
+            "fieldValidate": true,
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "fieldsContainOwnerManyToMany": false,
+    "fieldsContainOwnerOneToOne": true,
+    "fieldsContainOneToMany": false,
+    "fieldsContainLocalDate": false,
+    "fieldsContainCustomTime": false,
+    "fieldsContainBigDecimal": true,
+    "fieldsContainDateTime": false,
+    "fieldsContainDate": false,
+    "changelogDate": "20150727143001",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "validation": true
+}

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('ProductToTrackController', function ($scope, ProductToTrack, User, ProductType, Brand, Store, Price, ProductToTrackSearch, ParseLinks) {
+    .controller('ProductToTrackController', function ($scope, ProductToTrack, User, ProductType, Brand, Store, Price, ProductToTrackSearch, ParseLinks, usSpinnerService) {
         $scope.productToTracks = [];
         $scope.users = User.query();
         $scope.producttypes = ProductType.query();
@@ -36,25 +36,35 @@ angular.module('trackerApp')
         };
 
         $scope.save = function () {
+            usSpinnerService.spin('spinner');
+            $scope.saveButtonDisabled = true;
             if ($scope.productToTrack.id != null) {
-                ProductToTrack.update($scope.productToTrack,
-                    function () {
+                ProductToTrack.update($scope.productToTrack).$promise
+                    .then(function () {
                         $scope.refresh();
-                    },
-                    function () {
+                    })
+                    .catch(function () {
                         alert("Le sélecteur que vous avez saisi n'est pas approprié. Veuillez le modifier.");
+                    })
+                    .finally(function () {
+                        usSpinnerService.stop('spinner');
+                        $scope.saveButtonDisabled = false;
                     });
             } else {
-                ProductToTrack.save($scope.productToTrack,
-                    function () {
+                ProductToTrack.save($scope.productToTrack).$promise
+                    .then(function () {
                         $scope.refresh();
-                    },
-                    function () {
+                    })
+                    .catch(function () {
                         alert("Le sélecteur que vous avez saisi n'est pas approprié. Veuillez le modifier.");
+                    })
+                    .finally(function () {
+                        usSpinnerService.stop('spinner');
+                        $scope.saveButtonDisabled = false;
                     });
             }
         };
-
+        
         $scope.delete = function (id) {
             ProductToTrack.get({id: id}, function(result) {
                 $scope.productToTrack = result;
@@ -91,5 +101,7 @@ angular.module('trackerApp')
             $scope.productToTrack = {name: null, trackingUrl: null, trackingDomSelector: null, lastKnownPrice: null, id: null};
             $scope.editForm.$setPristine();
             $scope.editForm.$setUntouched();
+            usSpinnerService.stop('spinner');
+            $scope.saveButtonDisabled = false;
         };
     });

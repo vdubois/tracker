@@ -12,6 +12,7 @@
                 "store": "Gérer les enseignes",
                 "productToTrack": "Produits à suivre",
                 "price": "Price",
+                "alert": "Alertes prix",
                 "additionalEntity": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

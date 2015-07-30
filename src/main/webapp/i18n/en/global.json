@@ -12,6 +12,7 @@
                 "store": "Manage stores",
                 "productToTrack": "Products to track",
                 "price": "Price",
+                "alert": "Prices alerts",
                 "additionalEntity": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

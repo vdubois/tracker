@@ -1,6 +1,9 @@
 package io.github.vdubois.tracker.service;
 
+import io.github.vdubois.tracker.domain.Alert;
 import io.github.vdubois.tracker.domain.User;
+import io.github.vdubois.tracker.repository.AlertRepository;
+import lombok.extern.java.Log;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +12,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -16,6 +20,7 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -42,6 +47,9 @@ public class MailService {
     @Inject
     private SpringTemplateEngine templateEngine;
 
+    @Inject
+    private AlertRepository alertRepository;
+    
     /**
      * System default email address that sends the e-mails.
      */
@@ -94,5 +102,28 @@ public class MailService {
         String content = templateEngine.process("passwordResetEmail", context);
         String subject = messageSource.getMessage("email.reset.title", null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);
+    }
+
+    @Scheduled(cron = "0 30 0/12 * * *")
+    @Async
+    public void sendPriceAlerts() {
+        List<Alert> alerts = alertRepository.findAll();
+        alerts.stream()
+                .filter(this::isLastKnownPriceLowerThanAlertPrice)
+                .forEach(this::sendPriceAlert);
+    }
+
+    @Async
+    private void sendPriceAlert(Alert alert) {
+        User user = alert.getProductToTrack().getUser();
+        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        Context context = new Context(locale);
+        String content = templateEngine.process("priceAlertEmail", context);
+        String subject = messageSource.getMessage("email.priceAlert.title", null, locale);
+        sendEmail(user.getEmail(), subject, content, false, true);
+    }
+
+    private boolean isLastKnownPriceLowerThanAlertPrice(Alert alert) {
+        return alert.getProductToTrack().getLastKnownPrice().compareTo(alert.getPriceLowerThan()) < 0;
     }
 }

@@ -14,6 +14,7 @@
         <!-- endbuild -->
         <!-- build:css assets/styles/main.css -->
         <link rel="stylesheet" href="assets/styles/main.css">
+        <link rel="stylesheet" href="assets/styles/animations.css">
         <!-- endbuild -->
     </head>
     <body ng-app="trackerApp">
@@ -51,6 +52,9 @@
         <script src="bower_components/d3/d3.js"></script>
         <script src="bower_components/moment/moment.js"></script>
         <script src="bower_components/n3-line-charts/build/line-chart.js"></script>
+        <script src="bower_components/anijs/anijs.js"></script>
+        <script src="bower_components/angular-spinner/spin.js"></script>
+        <script src="bower_components/angular-spinner/angular-spinner.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
@@ -144,6 +148,11 @@
     <script src="scripts/app/entities/pricesEvolution/pricesEvolution.js"></script>    
     <script src="scripts/app/entities/pricesEvolution/pricesEvolution.controller.js"></script>    
     <script src="scripts/components/entities/pricesEvolution/pricesEvolution.service.js"></script>    
+    <script src="scripts/app/entities/alert/alert.js"></script>
+    <script src="scripts/app/entities/alert/alert.controller.js"></script>
+    <script src="scripts/app/entities/alert/alert-detail.controller.js"></script>
+    <script src="scripts/components/entities/alert/alert.service.js"></script>
+    <script src="scripts/components/entities/alert/alert.search.service.js"></script>
     <!-- endbuild -->
 </body>
 </html>

@@ -1,21 +1,21 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('BrandController', function ($scope, Brand, User, BrandSearch, ParseLinks) {
-        $scope.brands = [];
-        $scope.users = User.query();
+    .controller('AlertController', function ($scope, Alert, ProductToTrack, AlertSearch, ParseLinks) {
+        $scope.alerts = [];
+        $scope.productsToTrack = ProductToTrack.query();
         $scope.page = 1;
         $scope.loadAll = function() {
-            Brand.query({page: $scope.page, per_page: 20}, function(result, headers) {
+            Alert.query({page: $scope.page, per_page: 20}, function(result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
                 for (var i = 0; i < result.length; i++) {
-                    $scope.brands.push(result[i]);
+                    $scope.alerts.push(result[i]);
                 }
             });
         };
         $scope.reset = function() {
             $scope.page = 1;
-            $scope.brands = [];
+            $scope.alerts = [];
             $scope.loadAll();
         };
         $scope.loadPage = function(page) {
@@ -25,21 +25,20 @@ angular.module('trackerApp')
         $scope.loadAll();
 
         $scope.showUpdate = function (id) {
-            Brand.get({id: id}, function(result) {
-                $scope.brand = result;
-                var saveBrandModal = $("#saveBrandModal");
-                saveBrandModal.modal('show');
+            Alert.get({id: id}, function(result) {
+                $scope.alert = result;
+                $('#saveAlertModal').modal('show');
             });
         };
 
         $scope.save = function () {
-            if ($scope.brand.id != null) {
-                Brand.update($scope.brand,
+            if ($scope.alert.id != null) {
+                Alert.update($scope.alert,
                     function () {
                         $scope.refresh();
                     });
             } else {
-                Brand.save($scope.brand,
+                Alert.save($scope.alert,
                     function () {
                         $scope.refresh();
                     });
@@ -47,24 +46,24 @@ angular.module('trackerApp')
         };
 
         $scope.delete = function (id) {
-            Brand.get({id: id}, function(result) {
-                $scope.brand = result;
-                $('#deleteBrandConfirmation').modal('show');
+            Alert.get({id: id}, function(result) {
+                $scope.alert = result;
+                $('#deleteAlertConfirmation').modal('show');
             });
         };
 
         $scope.confirmDelete = function (id) {
-            Brand.delete({id: id},
+            Alert.delete({id: id},
                 function () {
                     $scope.reset();
-                    $('#deleteBrandConfirmation').modal('hide');
+                    $('#deleteAlertConfirmation').modal('hide');
                     $scope.clear();
                 });
         };
 
         $scope.search = function () {
-            BrandSearch.query({query: $scope.searchQuery}, function(result) {
-                $scope.brands = result;
+            AlertSearch.query({query: $scope.searchQuery}, function(result) {
+                $scope.alerts = result;
             }, function(response) {
                 if(response.status === 404) {
                     $scope.loadAll();
@@ -74,12 +73,12 @@ angular.module('trackerApp')
 
         $scope.refresh = function () {
             $scope.reset();
-            $('#saveBrandModal').modal('hide');
+            $('#saveAlertModal').modal('hide');
             $scope.clear();
         };
 
         $scope.clear = function () {
-            $scope.brand = {name: null, id: null};
+            $scope.alert = {priceLowerThan: null, id: null};
             $scope.editForm.$setPristine();
             $scope.editForm.$setUntouched();
         };

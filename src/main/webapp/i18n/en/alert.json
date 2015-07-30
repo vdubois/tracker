@@ -1,0 +1,19 @@
+{
+    "trackerApp": {
+        "alert" : {
+            "home": {
+                "title": "Prices alerts",
+                "createLabel": "Create a new price alert",
+                "createOrEditLabel": "Create or edit a price alert"
+            },
+            "delete": {
+                "question": "Are you sure you want to delete alert for {{ name }}?"
+            },
+            "detail": {
+                "title": "Price alert"
+            },
+            "priceLowerThan": "Price lower than",
+            "productToTrack": "Product to track"
+        }
+    }
+}

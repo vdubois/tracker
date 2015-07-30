@@ -19,6 +19,7 @@
                 </form>
             </div>
         </div>
+        <span us-spinner="{radius:10, width:8, length: 16}" spinner-key="spinner"></span>
     </div>
 
     <div class="modal fade" id="saveProductToTrackModal" tabindex="-1" role="dialog" aria-labelledby="myProductToTrackLabel"
@@ -86,7 +87,7 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
                             <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
                         </button>
-                        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary">
+                        <button id='saveButton' type="submit" ng-disabled="editForm.$invalid || saveButtonDisabled" class="btn btn-primary">
                             <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
                         </button>
                     </div>

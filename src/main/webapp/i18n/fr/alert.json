@@ -1,0 +1,20 @@
+{
+    "trackerApp": {
+        "alert" : {
+            "home": {
+                "title": "Alertes prix",
+                "createLabel": "Créer une nouvelle alerte",
+                "createOrEditLabel": "Créer ou éditer une alerte"
+            },
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer l'alerte prix pour {{ name }} ?"
+            },
+            "detail": {
+                "title": "Alerte prix"
+            },
+            "priceLowerThan": "Prix inférieur à",
+            "productToTrack": "Produit à suivre"
+        }
+    }
+}
+
