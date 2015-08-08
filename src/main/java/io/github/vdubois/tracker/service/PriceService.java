@@ -23,6 +23,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -44,7 +45,7 @@ public class PriceService {
     @Inject
     private JobLauncher jobLauncher;
 
-    @Inject
+    @Named("refreshPricesJob")
     private Job refreshPricesJob;
     
     /**

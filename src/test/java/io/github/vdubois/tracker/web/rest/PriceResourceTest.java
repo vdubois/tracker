@@ -3,12 +3,13 @@ package io.github.vdubois.tracker.web.rest;
 import io.github.vdubois.tracker.Application;
 import io.github.vdubois.tracker.domain.Price;
 import io.github.vdubois.tracker.repository.PriceRepository;
-import io.github.vdubois.tracker.repository.search.PriceSearchRepository;
-
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -22,16 +23,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the PriceResource REST controller.
@@ -57,9 +60,6 @@ public class PriceResourceTest {
     @Inject
     private PriceRepository priceRepository;
 
-    @Inject
-    private PriceSearchRepository priceSearchRepository;
-
     private MockMvc restPriceMockMvc;
 
     private Price price;
@@ -69,7 +69,6 @@ public class PriceResourceTest {
         MockitoAnnotations.initMocks(this);
         PriceResource priceResource = new PriceResource();
         ReflectionTestUtils.setField(priceResource, "priceRepository", priceRepository);
-        ReflectionTestUtils.setField(priceResource, "priceSearchRepository", priceSearchRepository);
         this.restPriceMockMvc = MockMvcBuilders.standaloneSetup(priceResource).build();
     }
 

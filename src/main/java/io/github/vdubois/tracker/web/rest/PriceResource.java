@@ -3,7 +3,6 @@ package io.github.vdubois.tracker.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.github.vdubois.tracker.domain.Price;
 import io.github.vdubois.tracker.repository.PriceRepository;
-import io.github.vdubois.tracker.repository.search.PriceSearchRepository;
 import io.github.vdubois.tracker.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -20,10 +24,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing Price.
@@ -36,9 +36,6 @@ public class PriceResource {
 
     @Inject
     private PriceRepository priceRepository;
-
-    @Inject
-    private PriceSearchRepository priceSearchRepository;
 
     /**
      * POST  /prices -> Create a new price.
@@ -53,7 +50,6 @@ public class PriceResource {
             return ResponseEntity.badRequest().header("Failure", "A new price cannot already have an ID").build();
         }
         priceRepository.save(price);
-        priceSearchRepository.save(price);
         return ResponseEntity.created(new URI("/api/prices/" + price.getId())).build();
     }
 
@@ -70,7 +66,6 @@ public class PriceResource {
             return create(price);
         }
         priceRepository.save(price);
-        priceSearchRepository.save(price);
         return ResponseEntity.ok().build();
     }
 
@@ -115,20 +110,5 @@ public class PriceResource {
     public void delete(@PathVariable Long id) {
         log.debug("REST request to delete Price : {}", id);
         priceRepository.delete(id);
-        priceSearchRepository.delete(id);
-    }
-
-    /**
-     * SEARCH  /_search/prices/:query -> search for the price corresponding
-     * to the query.
-     */
-    @RequestMapping(value = "/_search/prices/{query}",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public List<Price> search(@PathVariable String query) {
-        return StreamSupport
-            .stream(priceSearchRepository.search(queryString(query)).spliterator(), false)
-            .collect(Collectors.toList());
     }
 }

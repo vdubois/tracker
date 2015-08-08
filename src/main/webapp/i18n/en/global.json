@@ -35,7 +35,8 @@
                 "apidocs": "API",
                 "database": "Database"
             },
-            "language": "Language"
+            "language": "Language",
+            "theme": "Theme switcher"
         },
         "form": {
             "username": "Login",

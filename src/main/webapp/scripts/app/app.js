@@ -53,10 +53,12 @@ angular.module('trackerApp', ['LocalStorageModule', 'tmh.dynamicLocale', 'pascal
             // Add authorization token to headers
             request: function (config) {
                 config.headers = config.headers || {};
-                var token = localStorageService.get('token');
-                
-                if (token && token.expires_at && token.expires_at > new Date().getTime()) {
-                    config.headers.Authorization = 'Bearer ' + token.access_token;
+                if (config.url.indexOf('api.bootswatch.com') === -1) {
+                    var token = localStorageService.get('token');
+
+                    if (token && token.expires_at && token.expires_at > new Date().getTime()) {
+                        config.headers.Authorization = 'Bearer ' + token.access_token;
+                    }
                 }
                 
                 return config;

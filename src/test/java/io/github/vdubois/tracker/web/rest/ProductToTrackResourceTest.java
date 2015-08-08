@@ -3,12 +3,9 @@ package io.github.vdubois.tracker.web.rest;
 import io.github.vdubois.tracker.Application;
 import io.github.vdubois.tracker.domain.ProductToTrack;
 import io.github.vdubois.tracker.repository.ProductToTrackRepository;
-import io.github.vdubois.tracker.repository.search.ProductToTrackSearchRepository;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -26,8 +23,14 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the ProductToTrackResource REST controller.
@@ -53,9 +56,6 @@ public class ProductToTrackResourceTest {
     @Inject
     private ProductToTrackRepository productToTrackRepository;
 
-    @Inject
-    private ProductToTrackSearchRepository productToTrackSearchRepository;
-
     private MockMvc restProductToTrackMockMvc;
 
     private ProductToTrack productToTrack;
@@ -65,7 +65,6 @@ public class ProductToTrackResourceTest {
         MockitoAnnotations.initMocks(this);
         ProductToTrackResource productToTrackResource = new ProductToTrackResource();
         ReflectionTestUtils.setField(productToTrackResource, "productToTrackRepository", productToTrackRepository);
-        ReflectionTestUtils.setField(productToTrackResource, "productToTrackSearchRepository", productToTrackSearchRepository);
         this.restProductToTrackMockMvc = MockMvcBuilders.standaloneSetup(productToTrackResource).build();
     }
 

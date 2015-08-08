@@ -3,22 +3,21 @@ package io.github.vdubois.tracker.service;
 import io.github.vdubois.tracker.Application;
 import io.github.vdubois.tracker.domain.User;
 import io.github.vdubois.tracker.repository.UserRepository;
-import org.joda.time.DateTime;
 import io.github.vdubois.tracker.service.util.RandomUtil;
-import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class for the UserResource REST controller.

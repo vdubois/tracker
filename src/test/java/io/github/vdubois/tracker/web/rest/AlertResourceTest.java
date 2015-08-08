@@ -3,12 +3,9 @@ package io.github.vdubois.tracker.web.rest;
 import io.github.vdubois.tracker.Application;
 import io.github.vdubois.tracker.domain.Alert;
 import io.github.vdubois.tracker.repository.AlertRepository;
-import io.github.vdubois.tracker.repository.search.AlertSearchRepository;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -26,8 +23,14 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the AlertResource REST controller.
@@ -47,9 +50,6 @@ public class AlertResourceTest {
     @Inject
     private AlertRepository alertRepository;
 
-    @Inject
-    private AlertSearchRepository alertSearchRepository;
-
     private MockMvc restAlertMockMvc;
 
     private Alert alert;
@@ -59,7 +59,6 @@ public class AlertResourceTest {
         MockitoAnnotations.initMocks(this);
         AlertResource alertResource = new AlertResource();
         ReflectionTestUtils.setField(alertResource, "alertRepository", alertRepository);
-        ReflectionTestUtils.setField(alertResource, "alertSearchRepository", alertSearchRepository);
         this.restAlertMockMvc = MockMvcBuilders.standaloneSetup(alertResource).build();
     }
 

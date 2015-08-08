@@ -3,7 +3,6 @@ package io.github.vdubois.tracker.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.github.vdubois.tracker.domain.Brand;
 import io.github.vdubois.tracker.repository.BrandRepository;
-import io.github.vdubois.tracker.repository.search.BrandSearchRepository;
 import io.github.vdubois.tracker.service.UserService;
 import io.github.vdubois.tracker.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
@@ -13,7 +12,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -21,10 +25,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing Brand.
@@ -37,9 +37,6 @@ public class BrandResource {
 
     @Inject
     private BrandRepository brandRepository;
-
-    @Inject
-    private BrandSearchRepository brandSearchRepository;
 
     @Inject
     private UserService userService;
@@ -58,7 +55,6 @@ public class BrandResource {
         }
         brand.setUser(userService.getUserWithAuthorities());
         brandRepository.save(brand);
-        brandSearchRepository.save(brand);
         return ResponseEntity.created(new URI("/api/brands/" + brand.getId())).build();
     }
 
@@ -75,7 +71,6 @@ public class BrandResource {
             return create(brand);
         }
         brandRepository.save(brand);
-        brandSearchRepository.save(brand);
         return ResponseEntity.ok().build();
     }
 
@@ -120,20 +115,5 @@ public class BrandResource {
     public void delete(@PathVariable Long id) {
         log.debug("REST request to delete Brand : {}", id);
         brandRepository.delete(id);
-        brandSearchRepository.delete(id);
-    }
-
-    /**
-     * SEARCH  /_search/brands/:query -> search for the brand corresponding
-     * to the query.
-     */
-    @RequestMapping(value = "/_search/brands/{query}",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public List<Brand> search(@PathVariable String query) {
-        return StreamSupport
-            .stream(brandSearchRepository.search(queryString(query)).spliterator(), false)
-            .collect(Collectors.toList());
     }
 }

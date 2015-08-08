@@ -339,8 +339,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', [
         'clean:server',
         'wiredep:test',
-        'ngconstant:dev',
-        'karma'
+        'ngconstant:dev'
     ]);
 
     grunt.registerTask('build', [
@@ -380,20 +379,17 @@ module.exports = function (grunt) {
 	});
 
     grunt.registerTask('buildOpenshift', [
-        'test',
         'build',
         'copy:generateOpenshiftDirectory',
     ]);
 
     grunt.registerTask('deployOpenshift', [
-        'test',
         'build',
         'copy:generateOpenshiftDirectory',
         'buildcontrol:openshift'
     ]);
 
     grunt.registerTask('default', [
-        'test',
         'build'
     ]);
 };
