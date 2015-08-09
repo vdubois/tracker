@@ -14,14 +14,14 @@ async:
     queueCapacity: 10000
 
 mail:
-    host: mailsan.sqli.com
+    host: 
     port: 25
     username:
     password:
     protocol: smtp
     tls: false
     auth: false
-    from: vdubois@sqli.com
+    from: 
 
 authentication:
     oauth:

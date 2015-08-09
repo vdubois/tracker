@@ -4,19 +4,10 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <button class="btn btn-primary" data-toggle="modal" data-target="#saveStoreModal" ng-click="clear()">
                     <span class="glyphicon glyphicon-flash"></span> <span translate="trackerApp.store.home.createLabel">Create a new Store</span>
                 </button>
-            </div>
-            <div class="col-md-8">
-                <form name="searchForm" class="form-inline">
-                    <div class="form-group">
-                        <input type="text" class="form-control" ng-model="searchQuery" id="searchQuery" placeholder="Recherche">
-                    </div>
-                    <button class="btn btn-info" ng-click="search()"><span class="glyphicon glyphicon-search"></span> <span>Rechercher</span>
-                    </button>
-                </form>
             </div>
         </div>
     </div>
@@ -107,11 +98,6 @@
                     <td>{{store.name}}</td>
                     <td>{{store.baseDomSelector}}</td>
                     <td>
-                        <button type="submit"
-                                ui-sref="storeDetail({id:store.id})"
-                                class="btn btn-info btn-sm">
-                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span translate="entity.action.view"> View</span>
-                        </button>
                         <button type="submit"
                                 ng-click="showUpdate(store.id)"
                                 class="btn btn-primary btn-sm">

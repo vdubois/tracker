@@ -10,10 +10,10 @@ spring:
     datasource:
         dataSourceClassName: org.postgresql.ds.PGSimpleDataSource
         url: 
-        databaseName: d3buu1qd9d224j
-        serverName: ec2-54-83-51-0.compute-1.amazonaws.com
-        username: iatumctwndniqm
-        password: bZqAM6Um6yCqVMu8byTyUDTpua
+        databaseName: tracker
+        serverName: postgres
+        username: tracker
+        password: tracker
 
     jpa:
         database-platform: org.hibernate.dialect.PostgreSQL82Dialect
