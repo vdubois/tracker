@@ -4,31 +4,23 @@ import io.github.vdubois.tracker.domain.Point;
 import io.github.vdubois.tracker.domain.Price;
 import io.github.vdubois.tracker.domain.ProductToTrack;
 import io.github.vdubois.tracker.repository.PriceRepository;
+import io.github.vdubois.tracker.repository.ProductToTrackRepository;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -43,11 +35,8 @@ public class PriceService {
     private PriceRepository priceRepository;
 
     @Inject
-    private JobLauncher jobLauncher;
+    private ProductToTrackRepository productToTrackRepository;
 
-    @Named("refreshPricesJob")
-    private Job refreshPricesJob;
-    
     /**
      * @param productToTrack produit à suivre
      * @return le prix extrait de la page
@@ -81,14 +70,12 @@ public class PriceService {
     }
 
     @Scheduled(cron = "0 0 0/12 * * *")
-    public void refreshPrices() {
-        try {
-            jobLauncher.run(refreshPricesJob, new JobParametersBuilder()
-                    .addLong("timestamp", System.currentTimeMillis())
-                    .toJobParameters());
-        } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
-                | JobParametersInvalidException | JobRestartException jobExecutionAlreadyRunningException) {
-            log.severe(ExceptionUtils.getRootCauseMessage(jobExecutionAlreadyRunningException));
+    @Async
+    public void refreshPrices() throws IOException {
+        List<ProductToTrack> productsToTrack = productToTrackRepository.findAll();
+        for (ProductToTrack productToTrack : productsToTrack) {
+            productToTrack.setLastKnownPrice(extractPriceFromURLWithDOMSelectorIfFilled(productToTrack));
+            recordPriceForProductToTrack(productToTrack);
         }
     }
 

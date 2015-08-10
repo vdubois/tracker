@@ -4,16 +4,8 @@ import io.github.vdubois.tracker.domain.Alert;
 import io.github.vdubois.tracker.domain.User;
 import io.github.vdubois.tracker.repository.AlertRepository;
 import org.apache.commons.lang.CharEncoding;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -26,7 +18,6 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.mail.internet.MimeMessage;
 import java.util.Currency;
 import java.util.List;
@@ -59,12 +50,6 @@ public class MailService {
     @Inject
     private AlertRepository alertRepository;
 
-    @Inject
-    private JobLauncher jobLauncher;
-
-    @Named("sendPricesAlertsJob")
-    private Job sendPricesAlertsJob;
-    
     /**
      * System default email address that sends the e-mails.
      */
@@ -118,19 +103,8 @@ public class MailService {
         String subject = messageSource.getMessage("email.reset.title", null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);
     }
-    
+
     @Scheduled(cron = "0 30 0/12 * * *")
-    public void launchPriceAlertsJob() {
-        try {
-            jobLauncher.run(sendPricesAlertsJob, new JobParametersBuilder()
-                    .addLong("timestamp", System.currentTimeMillis())
-                    .toJobParameters());
-        } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
-                | JobParametersInvalidException | JobRestartException jobException) {
-            log.error(ExceptionUtils.getRootCauseMessage(jobException), jobException);
-        }
-    }
-    
     @Async
     public void sendPriceAlerts() {
         List<Alert> alerts = alertRepository.findAll();
@@ -146,9 +120,10 @@ public class MailService {
         Context context = new Context(locale);
         context.setVariable("user", user);
         context.setVariable("alert", alert);
-        context.setVariable("currency", Currency.getInstance(locale).getSymbol());
+        context.setVariable("currency", "€");
         String content = templateEngine.process("priceAlertEmail", context);
-        String subject = messageSource.getMessage("email.priceAlert.title", null, locale);
+        String subject = messageSource.getMessage("email.priceAlert.title",
+                new Object[]{alert.getProductToTrack().getName(), alert.getPriceLowerThan(), "€"}, locale);
         sendEmail(user.getEmail(), subject, content, false, true);
     }
 

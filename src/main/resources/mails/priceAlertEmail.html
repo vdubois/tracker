@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="#{email.priceAlert.title}">JHipster activation</title>
+    <title th:text="#{email.priceAlert.title('${alert.productToTrack.name}',${alert.priceLowerThan},${currency})}">JHipster activation</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
@@ -12,7 +12,7 @@
     You're receiving this email because the product '{0}' just passed below {1}{2} on {3}'s website
 </p>
 <p>
-    <span th:text="#{email.priceAlert.politeness}">Regards, <br/>Tracker team</span>
+    <span th:text="#{email.priceAlert.politeness}">Regards, Tracker team</span>
 </p>
 </body>
 </html>
