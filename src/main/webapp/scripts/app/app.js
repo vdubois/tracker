@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('trackerApp', ['LocalStorageModule', 'tmh.dynamicLocale', 'pascalprecht.translate', 
-    'ngResource', 'ui.router', 'ngCookies', 'ngCacheBuster', 'infinite-scroll', 'n3-line-chart', 'angularSpinner'])
+    'ngResource', 'ui.router', 'ngCookies', 'ngCacheBuster', 'infinite-scroll', 'highcharts-ng', 'angularSpinner'])
 
     .run(function ($rootScope, $location, $window, $http, $state, $translate, Language, Auth, Principal, ENV, VERSION) {
         $rootScope.ENV = ENV;
@@ -127,4 +127,22 @@ angular.module('trackerApp', ['LocalStorageModule', 'tmh.dynamicLocale', 'pascal
         tmhDynamicLocaleProvider.useCookieStorage();
         tmhDynamicLocaleProvider.storageKey('NG_TRANSLATE_LANG_KEY');
         
+    })
+    .filter('product', function() {
+        return function(productToTrack) {
+            if (productToTrack) {
+                var out = productToTrack.name;
+                out += ' - ';
+                if (productToTrack.brand) {
+                    out += productToTrack.brand.name;
+                }
+                if (productToTrack.store) {
+                    out += ' (';
+                    out += productToTrack.store.name;
+                    out += ')';
+                }
+                return out;
+            }
+        };
     });
+

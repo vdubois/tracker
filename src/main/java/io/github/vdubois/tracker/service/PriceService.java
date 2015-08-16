@@ -69,7 +69,7 @@ public class PriceService {
         priceRepository.save(recordPrice);
     }
 
-    @Scheduled(cron = "0 0 0/12 * * *")
+    @Scheduled(cron = "0 * * * * *")
     @Async
     public void refreshPrices() throws IOException {
         List<ProductToTrack> productsToTrack = productToTrackRepository.findAll();

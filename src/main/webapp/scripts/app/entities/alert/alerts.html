@@ -29,7 +29,7 @@
 
                         <div class="form-group">
                             <label translate="trackerApp.alert.productToTrack">Product to track</label>
-                            <select class="form-control" name="brand" ng-model="alert.productToTrack.id" ng-options="productToTrack.id as productToTrack.name for productToTrack in productsToTrack">
+                            <select class="form-control" name="brand" ng-model="alert.productToTrack.id" ng-options="productToTrack.id as productToTrack | product for productToTrack in productsToTrack">
                             </select>
                         </div>
 
@@ -100,7 +100,7 @@
             </thead>
             <tbody infinite-scroll="loadPage(page + 1)" infinite-scroll-disabled="links['last'] == page">
                 <tr ng-repeat="alert in alerts">
-                    <td>{{alert.productToTrack.name}}</td>
+                    <td>{{alert.productToTrack | product}}</td>
                     <td>{{alert.priceLowerThan}}</td>
                     <td>
                         <button type="submit"
