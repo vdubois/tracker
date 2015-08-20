@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('PricesEvolutionController', function ($scope, PricesEvolution, ProductToTrack, User, ProductTypeSearch, ParseLinks, Account) {
+    .controller('PricesEvolutionController', function ($scope, PricesEvolution, ProductToTrack, $translate) {
 
         $scope.showChart = false;
         
@@ -12,90 +12,86 @@ angular.module('trackerApp')
         $scope.loadGraphDataForProductToTrack = function (productToTrack) {
             PricesEvolution.get({id: productToTrack.id}).$promise
                 .then(function (pricesEvolutionResult) {
+                    var firstPointDate = new Date(pricesEvolutionResult[0].date);
                     var data = pricesEvolutionResult.map(function (element) {
-                        return parseFloat(element.value, 10);
+                        var pointDate = new Date(element.date);
+                        return [Date.UTC(pointDate.getFullYear(), pointDate.getMonth(), pointDate.getDate()), parseFloat(element.value, 10)];
                     });
-                    Highcharts.setOptions({
-                        lang: {
-                            months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août',
-                                'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-                            shortMonths: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août',
-                                'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-                            resetZoom: 'Annuler le zoom'
-                        }
-                    });                    
-                        
-                    $scope.chartConfig = {
-                        options: {
-                            chart: {
-                                type: 'line',
-                                zoomType: 'x'
-                            },
-                            tooltip: {
-                                headerFormat: '<b>{series.name}</b><br>',
-                                pointFormat: '{point.x:%e %B} : {point.y:.2f}€'
-                            },
-                            xAxis: {
-                                type: 'datetime',
-                                title: {
-                                    text: 'Date'
+                    var months = [];
+                    var resetZoom = '';
+                    var price = '';
+                    $translate('months').then(function (translation) {
+                        months = translation.split('|');
+                        return $translate('resetZoom');
+                    }).then(function (translation) {
+                        resetZoom = translation;
+                        return $translate('price');
+                    }).then(function (translation) {
+                        price = translation;
+                    }).catch(function (error) {
+                        console.error(error);
+                    }).finally(function () {
+                        Highcharts.setOptions({
+                            lang: {
+                                months: months,
+                                shortMonths: months,
+                                resetZoom: resetZoom
+                            }
+                        });
+                        $scope.chartConfig = {
+                            options: {
+                                chart: {
+                                    type: 'line',
+                                    zoomType: 'x'
                                 },
-                                labels: {
-                                    x: 3,
-                                    y: -3
+                                tooltip: {
+                                    headerFormat: '<b>{series.name}</b><br>',
+                                    pointFormat: '{point.x:%e %B} : {point.y:.2f}€'
+                                },
+                                xAxis: {
+                                    type: 'datetime',
+                                    title: {
+                                        text: 'Date'
+                                    },
+                                    labels: {
+                                        x: 3,
+                                        y: -3
+                                    }
+                                },
+                                yAxis: { // left y axis
+                                    title: {
+                                        text: price
+                                    },
+                                    showFirstLabel: false
+                                },
+                                plotOptions: {
+                                    line: {
+                                        lineWidth: 4,
+                                        pointInterval: 3600000 * 12,
+                                        pointStart: Date.UTC(firstPointDate.getFullYear(), firstPointDate.getMonth(), firstPointDate.getDate(), 0, 0, 0)
+                                    }
                                 }
                             },
-                            yAxis: { // left y axis
-                                title: {
-                                    text: 'Prix'
-                                },
-                                showFirstLabel: false
+                            series: [{
+                                name: price,
+                                data: data
+                            }],
+                            title: {
+                                text: productToTrack.productType.name + ' ' + productToTrack.name + ' - '
+                                + productToTrack.brand.name + ' (' + productToTrack.store.name + ')'
                             },
-                            plotOptions: {
-                                line: {
-                                    lineWidth: 4,
-                                    pointInterval: 3600000 * 12,
-                                    pointStart: Date.UTC(2015, 4, 31, 0, 0, 0)
-                                }
+                            loading: false,
+                            useHighStocks: false,
+                            size: {
+                                width: 1000,
+                                height: 450
+                            },
+                            func: function (chart) {
+                                console.log(chart);
                             }
-                        },
-                        series: [{
-                            name: 'Prix',
-                            data: data
-                        }],
-                        title: {
-                            text: 'Evolution des prix pour ' + productToTrack.name + ' (marque ' 
-                                + productToTrack.brand.name + ' chez ' + productToTrack.store.name + ')'
-                        },
-                        loading: false,
-                        useHighStocks: false,
-                        size: {
-                            width: 1000,
-                            height: 450
-                        },
-                        func: function (chart) {
-                            console.log(chart);
-                        }
-                    };
-                    /*$scope.data = pricesEvolutionResult;
-                    $scope.options = {
-                        axes: {date: {type: "date"}},
-                        series: [{
-                            y: "value",
-                            label: productToTrack.name,
-                            color: "#8c564b"
-                        }],
-                        tooltip: {
-                            mode: "scrubber",
-                            formatter: function (x, y, series) {
-                                return moment(x).fromNow() + ' : ' + y;
-                            }
-                        }
-                    };*/
-                    /*$scope.data.forEach(function(row) {
-                        row.date = new Date(row.date);
-                    });*/
-                    $scope.showChart = true;
+                        };
+                        $scope.showChart = true;
+                    });                     
                     
                 }).finally(function () {
                 });

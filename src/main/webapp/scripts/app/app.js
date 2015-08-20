@@ -131,7 +131,12 @@ angular.module('trackerApp', ['LocalStorageModule', 'tmh.dynamicLocale', 'pascal
     .filter('product', function() {
         return function(productToTrack) {
             if (productToTrack) {
-                var out = productToTrack.name;
+                var out = '';
+                if (productToTrack.productType) {
+                    out += productToTrack.productType.name;
+                    out += ' ';
+                }
+                out += productToTrack.name;
                 out += ' - ';
                 if (productToTrack.brand) {
                     out += productToTrack.brand.name;

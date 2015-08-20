@@ -28,11 +28,10 @@ module.exports = function (config) {
             'main/webapp/bower_components/angular-local-storage/dist/angular-local-storage.js',
             'main/webapp/bower_components/angular-cache-buster/angular-cache-buster.js',
             'main/webapp/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
-            'main/webapp/bower_components/d3/d3.js',
-            'main/webapp/bower_components/moment/moment.js',
-            'main/webapp/bower_components/n3-line-charts/build/line-chart.min.js',
             'main/webapp/bower_components/spin.js/spin.js',
             'main/webapp/bower_components/angular-spinner/angular-spinner.js',
+            'main/webapp/bower_components/moment/moment.js',
+            'main/webapp/bower_components/highcharts-ng/dist/highcharts-ng.js',
             'main/webapp/bower_components/angular-mocks/angular-mocks.js',
             // endbower
             'main/webapp/scripts/app/app.js',

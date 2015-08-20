@@ -1,16 +1,25 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('StoreController', function ($scope, Store, User, StoreSearch, ParseLinks) {
+    .controller('StoreController', function ($scope, Store, User, StoreSearch, ParseLinks, ProductToTrack) {
         $scope.stores = [];
         $scope.users = User.query();
         $scope.page = 1;
         $scope.loadAll = function() {
             Store.query({page: $scope.page, per_page: 20}, function(result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
-                for (var i = 0; i < result.length; i++) {
-                    $scope.stores.push(result[i]);
-                }
+                ProductToTrack.query().$promise.then(function (data) {
+                    $scope.productsToTrack = data;
+                    for (var i = 0; i < result.length; i++) {
+                        result[i].deletionDisabled = false;
+                        $scope.productsToTrack.forEach(function (element) {
+                            if (element.store.id === result[i].id) {
+                                result[i].deletionDisabled = true;
+                            }
+                        });
+                        $scope.stores.push(result[i]);
+                    }
+                });
             });
         };
         $scope.reset = function() {

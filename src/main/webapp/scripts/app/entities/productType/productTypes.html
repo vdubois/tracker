@@ -95,7 +95,7 @@
                                 class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span translate="entity.action.edit"> Edit</span>
                         </button>
-                        <button type="submit"
+                        <button type="submit" ng-show="!productType.deletionDisabled"
                                 ng-click="delete(productType.id)"
                                 class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete"> Delete</span>

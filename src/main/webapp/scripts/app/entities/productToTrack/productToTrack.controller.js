@@ -39,6 +39,7 @@ angular.module('trackerApp')
             usSpinnerService.spin('spinner');
             $scope.saveButtonDisabled = true;
             if ($scope.productToTrack.id != null) {
+                console.log($scope.productToTrack);
                 ProductToTrack.update($scope.productToTrack).$promise
                     .then(function () {
                         $scope.refresh();
@@ -51,6 +52,7 @@ angular.module('trackerApp')
                         $scope.saveButtonDisabled = false;
                     });
             } else {
+                console.log($scope.productToTrack);
                 ProductToTrack.save($scope.productToTrack).$promise
                     .then(function () {
                         $scope.refresh();
@@ -79,16 +81,6 @@ angular.module('trackerApp')
                     $('#deleteProductToTrackConfirmation').modal('hide');
                     $scope.clear();
                 });
-        };
-
-        $scope.search = function () {
-            ProductToTrackSearch.query({query: $scope.searchQuery}, function(result) {
-                $scope.productToTracks = result;
-            }, function(response) {
-                if(response.status === 404) {
-                    $scope.loadAll();
-                }
-            });
         };
 
         $scope.refresh = function () {

@@ -23,6 +23,7 @@
     "angular-cache-buster": "http://github.com/saintmac/angular-cache-buster.git#0.4.3",
     "ngInfiniteScroll": "http://github.com/sroze/ngInfiniteScroll.git#1.2.0",
     "angular-spinner": "https://github.com/urish/angular-spinner.git#0.6.2",
+    "moment": "http://github.com/moment/moment.git#2.10.3",
     "highcharts-ng": "https://github.com/pablojim/highcharts-ng.git#0.0.8"
   },
   "devDependencies": {

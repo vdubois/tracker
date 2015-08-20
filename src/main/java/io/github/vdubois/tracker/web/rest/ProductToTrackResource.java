@@ -1,9 +1,13 @@
 package io.github.vdubois.tracker.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.github.vdubois.tracker.domain.Alert;
+import io.github.vdubois.tracker.domain.Price;
 import io.github.vdubois.tracker.domain.ProductToTrack;
+import io.github.vdubois.tracker.repository.AlertRepository;
 import io.github.vdubois.tracker.repository.PriceRepository;
 import io.github.vdubois.tracker.repository.ProductToTrackRepository;
+import io.github.vdubois.tracker.repository.StoreRepository;
 import io.github.vdubois.tracker.service.PriceService;
 import io.github.vdubois.tracker.service.UserService;
 import io.github.vdubois.tracker.web.rest.util.PaginationUtil;
@@ -24,10 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing ProductToTrack.
@@ -45,10 +51,13 @@ public class ProductToTrackResource {
     private UserService userService;
 
     @Inject
-    private PriceRepository priceRepository;
+    private PriceService priceService;
 
     @Inject
-    private PriceService priceService;
+    private StoreRepository storeRepository;
+
+    @Inject
+    private AlertRepository alertRepository;
     
     /**
      * POST  /productToTracks -> Create a new productToTrack.
@@ -62,11 +71,15 @@ public class ProductToTrackResource {
         if (productToTrack.getId() != null) {
             return ResponseEntity.badRequest().header("Failure", "A new productToTrack cannot already have an ID").build();
         }
+        BigDecimal lastKnownPrice = priceService.extractPriceFromURLWithDOMSelectorIfFilled(productToTrack);
         productToTrack.setUser(userService.getUserWithAuthorities());
-        productToTrack.setLastKnownPrice(
-                priceService.extractPriceFromURLWithDOMSelectorIfFilled(productToTrack));
+        productToTrack.setStore(storeRepository.findOne(productToTrack.getStore().getId()));
+        productToTrack.setLastKnownPrice(lastKnownPrice);
         productToTrackRepository.save(productToTrack);
-        priceService.recordPriceForProductToTrack(productToTrack);
+        ProductToTrack productToTrackToUpdate = productToTrackRepository.findOne(productToTrack.getId());
+        if (productToTrackToUpdate != null) {
+            priceService.recordPriceForProductToTrack(productToTrackToUpdate);
+        }
         return ResponseEntity.created(new URI("/api/productToTracks/" + productToTrack.getId())).build();
     }
 
@@ -84,6 +97,7 @@ public class ProductToTrackResource {
         }
         productToTrack.setLastKnownPrice(
                 priceService.extractPriceFromURLWithDOMSelectorIfFilled(productToTrack));
+        productToTrack.setStore(storeRepository.findOne(productToTrack.getStore().getId()));
         productToTrackRepository.save(productToTrack);
         priceService.recordPriceForProductToTrack(productToTrack);
         return ResponseEntity.ok().build();
@@ -129,6 +143,9 @@ public class ProductToTrackResource {
     @Timed
     public void delete(@PathVariable Long id) {
         log.debug("REST request to delete ProductToTrack : {}", id);
+        List<Alert> productAlerts = 
+                alertRepository.findAllByProductToTrack(productToTrackRepository.findOne(id));
+        productAlerts.forEach(alertRepository::delete);
         productToTrackRepository.delete(id);
     }
 }

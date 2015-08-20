@@ -104,5 +104,8 @@
             "datetimelocal": "Ce champ doit être une date et une heure."
         }
     },
-    "footer": "Copyright 2015 Vincent Dubois <dubois.vct@free.fr>"
+    "footer": "Copyright 2015 Vincent Dubois <dubois.vct@free.fr>",
+    "months": "Janvier|Février|Mars|Avril|Mai|Juin|Juillet|Août|Septembre|Octobre|Novembre|Décembre",
+    "resetZoom": "Annuler le zoom",
+    "price": "Prix"
 }

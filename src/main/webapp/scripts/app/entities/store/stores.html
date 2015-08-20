@@ -29,8 +29,8 @@
 
                         <div class="form-group">
                             <label translate="trackerApp.store.name">Name</label>
-                            <input type="text" class="form-control" name="name"
-                                   ng-model="store.name" required>
+                            <input type="text" class="form-control" id="name" name="name"
+                                   ng-model="store.name" autofocus="true" required>
 
                             <div ng-show="editForm.name.$invalid">
                                 <p class="help-block"
@@ -103,7 +103,7 @@
                                 class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span translate="entity.action.edit"> Edit</span>
                         </button>
-                        <button type="submit"
+                        <button type="submit" ng-show="!store.deletionDisabled"
                                 ng-click="delete(store.id)"
                                 class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete"> Delete</span>

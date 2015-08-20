@@ -1,7 +1,9 @@
 package io.github.vdubois.tracker.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.github.vdubois.tracker.domain.ProductToTrack;
 import io.github.vdubois.tracker.domain.Store;
+import io.github.vdubois.tracker.repository.ProductToTrackRepository;
 import io.github.vdubois.tracker.repository.StoreRepository;
 import io.github.vdubois.tracker.service.UserService;
 import io.github.vdubois.tracker.web.rest.util.PaginationUtil;
@@ -40,6 +42,9 @@ public class StoreResource {
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private ProductToTrackRepository productToTrackRepository;
     
     /**
      * POST  /stores -> Create a new store.

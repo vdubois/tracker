@@ -1,16 +1,25 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('BrandController', function ($scope, Brand, User, BrandSearch, ParseLinks) {
+    .controller('BrandController', function ($scope, Brand, User, BrandSearch, ParseLinks, ProductToTrack) {
         $scope.brands = [];
         $scope.users = User.query();
         $scope.page = 1;
         $scope.loadAll = function() {
             Brand.query({page: $scope.page, per_page: 20}, function(result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
-                for (var i = 0; i < result.length; i++) {
-                    $scope.brands.push(result[i]);
-                }
+                ProductToTrack.query().$promise.then(function (data) {
+                    for (var i = 0; i < result.length; i++) {
+                        result[i].deletionDisabled = false;
+                        data.forEach(function (element) {
+                            if (element.brand.id === result[i].id) {
+                                result[i].deletionDisabled = true;
+                            }
+                        });
+                        $scope.brands.push(result[i]);
+                    }
+
+                });
             });
         };
         $scope.reset = function() {

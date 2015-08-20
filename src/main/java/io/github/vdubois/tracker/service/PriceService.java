@@ -8,6 +8,7 @@ import io.github.vdubois.tracker.repository.ProductToTrackRepository;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -43,19 +44,22 @@ public class PriceService {
      * @throws IOException exception d'entrée/sortie
      */
     public BigDecimal extractPriceFromURLWithDOMSelectorIfFilled(ProductToTrack productToTrack) throws IOException {
-        if (StringUtils.isNotEmpty(productToTrack.getTrackingDomSelector())) {
-            try {
-                Document doc = Jsoup.connect(productToTrack.getTrackingUrl()).get();
-                Elements priceElements = doc.select(productToTrack.getTrackingDomSelector());
-                String priceAsText = priceElements.get(0).text();
-                priceAsText = priceAsText.replaceAll("€", ".");
-                return new BigDecimal(priceAsText);
-            } catch (Exception exception) {
-                log.severe(exception.getMessage());
-                throw exception;
+        try {
+            Document doc = Jsoup.connect(productToTrack.getTrackingUrl()).get();
+            String selector = productToTrack.getTrackingDomSelector();
+            if (StringUtils.isEmpty(selector)) {
+                selector = productToTrack.getStore().getBaseDomSelector();
             }
+            Elements priceElements = doc.select(selector);
+            log.warning(priceElements.toString());
+            String priceAsText = priceElements.get(0).text();
+            log.warning(priceAsText);
+            priceAsText = priceAsText.replaceAll("€", ".");
+            return new BigDecimal(priceAsText);
+        } catch (Exception exception) {
+            log.severe(exception.getMessage());
+            throw exception;
         }
-        return null;
     }
 
     /**
@@ -69,14 +73,25 @@ public class PriceService {
         priceRepository.save(recordPrice);
     }
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 * * * *")
     @Async
     public void refreshPrices() throws IOException {
         List<ProductToTrack> productsToTrack = productToTrackRepository.findAll();
         for (ProductToTrack productToTrack : productsToTrack) {
-            productToTrack.setLastKnownPrice(extractPriceFromURLWithDOMSelectorIfFilled(productToTrack));
-            recordPriceForProductToTrack(productToTrack);
+            if (isLastKnownPriceOlderThanOneDayForProductToTrack(productToTrack)) {
+                productToTrack.setLastKnownPrice(extractPriceFromURLWithDOMSelectorIfFilled(productToTrack));
+                recordPriceForProductToTrack(productToTrack);
+            }
         }
+    }
+
+    private boolean isLastKnownPriceOlderThanOneDayForProductToTrack(ProductToTrack productToTrack) {
+        // we order prices by last date first
+        List<Price> prices = productToTrack.getPricess()
+                .stream().sorted(Comparator.comparing(Price::getCreatedAt)).collect(Collectors.toList());
+        DateTime now = DateTime.now();
+        Days days = Days.daysBetween(prices.get(0).getCreatedAt(), now);
+        return days.getDays() >= 1;
     }
 
     public List<Point> findAllPricesEvolutionsForProductToTrack(ProductToTrack productToTrack) {

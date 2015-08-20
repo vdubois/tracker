@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('ProductTypeController', function ($scope, ProductType, User, ProductTypeSearch, ParseLinks, Account) {
+    .controller('ProductTypeController', function ($scope, ProductType, User, ProductTypeSearch, ParseLinks, Account, ProductToTrack) {
         $scope.productTypes = [];
         $scope.users = User.query();
         $scope.account = Account.get();
@@ -9,9 +9,17 @@ angular.module('trackerApp')
         $scope.loadAll = function() {
             ProductType.query({page: $scope.page, per_page: 20}, function(result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
-                for (var i = 0; i < result.length; i++) {
-                    $scope.productTypes.push(result[i]);
-                }
+                ProductToTrack.query().$promise.then(function (data) {
+                    for (var i = 0; i < result.length; i++) {
+                        result[i].deletionDisabled = false;
+                        data.forEach(function (element) {
+                            if (element.productType.id === result[i].id) {
+                                result[i].deletionDisabled = true;
+                            } 
+                        });
+                        $scope.productTypes.push(result[i]);
+                    }
+                });
             });
         };
         $scope.reset = function() {

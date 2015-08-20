@@ -50,7 +50,7 @@
         },
         "messages": {
             "info": {
-                "authenticated": "If you want to <a href=\"#/login\">authenticate</a>, you can try the default accounts:<br/>- Administrator (login=\"admin\" and password=\"admin\") <br/>- User (login=\"user\" and password=\"user\").",
+                "authenticated": "Please <a href=\"#/login\">authenticate</a>",
                 "register": "You don't have an account yet? <a href=\"#/register\">Register a new account</a>"
             },
             "error": {
@@ -104,5 +104,8 @@
             "datetimelocal": "This field should be a date and time."
         }
     },
-    "footer": "Copyright 2015 Vincent Dubois <dubois.vct@free.fr>"
+    "footer": "Copyright 2015 Vincent Dubois <dubois.vct@free.fr>",
+    "months": "January|February|March|April|May|June|July|August|September|October|November|December",
+    "resetZoom": "Reset zoom",
+    "price": "Price"
 }
