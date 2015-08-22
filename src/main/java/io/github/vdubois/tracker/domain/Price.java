@@ -108,4 +108,8 @@ public class Price implements Serializable {
                 ", createdAt='" + createdAt + "'" +
                 '}';
     }
+
+    public String getProductToTrackStoreName() {
+        return productToTrack.getStore().getName();
+    }
 }

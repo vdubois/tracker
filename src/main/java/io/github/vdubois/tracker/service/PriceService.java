@@ -1,6 +1,5 @@
 package io.github.vdubois.tracker.service;
 
-import io.github.vdubois.tracker.domain.Point;
 import io.github.vdubois.tracker.domain.Price;
 import io.github.vdubois.tracker.domain.ProductToTrack;
 import io.github.vdubois.tracker.repository.PriceRepository;
@@ -90,26 +89,14 @@ public class PriceService {
 
     private boolean isLastKnownPriceOlderThanThreeHoursForProductToTrack(ProductToTrack productToTrack) {
         // we order prices by last date first
-        List<Price> prices = productToTrackRepository.findOne(productToTrack.getId()).getPricess()
-                .stream().sorted(Comparator.comparing(Price::getCreatedAt).reversed()).collect(Collectors.toList());
+        List<Price> prices = productToTrackRepository.findOne(productToTrack.getId())
+                .getPricess()
+                .stream()
+                .sorted(Comparator.comparing(Price::getCreatedAt).reversed())
+                .collect(Collectors.toList());
         DateTime now = DateTime.now();
         Hours hours = Hours.hoursBetween(prices.get(0).getCreatedAt(), now);
+        log.warning("Hours since last refresh : " + hours.getHours());
         return hours.getHours() >= 3;
-    }
-
-    public List<Point> findAllPricesEvolutionsForProductToTrack(ProductToTrack productToTrack) {
-        List<Price> pricesForProductToTrack = priceRepository.findAllByProductToTrack(productToTrack);
-        List<Point> graphData = pricesForProductToTrack
-                .stream()
-                .sorted(Comparator.comparing(Price::getCreatedAt))
-                .map(price -> {
-                    Point point = new Point();
-                    point.setDate(price.getCreatedAt().toString());
-                    point.setValue(price.getValue().toString());
-                    return point;
-                })
-                .collect(Collectors.toList());
-        log.fine(graphData.toString());
-        return graphData;
     }
 }

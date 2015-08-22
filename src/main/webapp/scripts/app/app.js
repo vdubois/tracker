@@ -149,5 +149,22 @@ angular.module('trackerApp', ['LocalStorageModule', 'tmh.dynamicLocale', 'pascal
                 return out;
             }
         };
+    })
+    .filter('productWithoutStore', function () {
+        return function (productToTrack) {
+            if (productToTrack) {
+                var out = '';
+                if (productToTrack.productType) {
+                    out += productToTrack.productType.name;
+                    out += ' ';
+                }
+                out += productToTrack.name;
+                out += ' - ';
+                if (productToTrack.brand) {
+                    out += productToTrack.brand.name;
+                }
+                return out;
+            }
+        };
     });
 

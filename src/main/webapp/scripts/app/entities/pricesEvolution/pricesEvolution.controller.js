@@ -5,19 +5,35 @@ angular.module('trackerApp')
 
         $scope.showChart = false;
         
-        ProductToTrack.query(function (productToTrackResult) {
-            $scope.productsToTrack = productToTrackResult;
+        ProductToTrack.query(function (productToTrackResultData) {
+            var result = [];
+            var productsToTrackResult = [];
+            productToTrackResultData.forEach(function(item) {
+                if(result.indexOf(item.name) < 0) {
+                    result.push(item.name);
+                    productsToTrackResult.push(item);
+                }
+            });
+            $scope.productsToTrack = productsToTrackResult;
         });
         
         $scope.loadGraphDataForProductToTrack = function (productToTrack) {
-            PricesEvolution.get({id: productToTrack.id}).$promise
+            PricesEvolution.get({id: productToTrack.name}).$promise
                 .then(function (pricesEvolutionResult) {
-                    var firstPointDate = new Date(pricesEvolutionResult[0].date);
-                    var data = pricesEvolutionResult.map(function (element) {
-                        var pointDate = new Date(element.date);
-                        return [Date.UTC(pointDate.getFullYear(), pointDate.getMonth(), pointDate.getDate(), 
-                            pointDate.getHours(), pointDate.getMinutes(), pointDate.getSeconds()), parseFloat(element.value, 10)];
-                    });
+                    var series = [];
+                    var data = [];
+                    for (var propertyName in pricesEvolutionResult) {
+                        if (pricesEvolutionResult.hasOwnProperty(propertyName) 
+                            && propertyName !== '$promise'
+                            && propertyName !== '$resolved') {
+                            data = pricesEvolutionResult[propertyName].map(function (element) {
+                                var pointDate = new Date(element.createdAt);
+                                return [Date.UTC(pointDate.getFullYear(), pointDate.getMonth(), pointDate.getDate(),
+                                    pointDate.getHours(), pointDate.getMinutes(), pointDate.getSeconds()), parseFloat(element.value, 10)];
+                            });
+                            series.push({name: propertyName, data: data});
+                        }
+                    }
                     var months = [];
                     var resetZoom = '';
                     var price = '';
@@ -67,19 +83,14 @@ angular.module('trackerApp')
                                 },
                                 plotOptions: {
                                     line: {
-                                        lineWidth: 4,
-                                        pointInterval: 3600000 * 12,
-                                        pointStart: Date.UTC(firstPointDate.getFullYear(), firstPointDate.getMonth(), firstPointDate.getDate(), 0, 0, 0)
+                                        lineWidth: 4
                                     }
                                 }
                             },
-                            series: [{
-                                name: price,
-                                data: data
-                            }],
+                            series: series,
                             title: {
                                 text: productToTrack.productType.name + ' ' + productToTrack.name + ' - '
-                                + productToTrack.brand.name + ' (' + productToTrack.store.name + ')'
+                                + productToTrack.brand.name
                             },
                             loading: false,
                             useHighStocks: false,

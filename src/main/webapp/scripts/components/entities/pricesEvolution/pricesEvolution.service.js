@@ -10,7 +10,7 @@ angular.module('trackerApp')
                     data = angular.fromJson(data);
                     return data;
                 },
-                isArray: true
+                isArray: false
             }
         });
     });

@@ -13,4 +13,5 @@ public interface ProductToTrackRepository extends JpaRepository<ProductToTrack,L
     @Query("select productToTrack from ProductToTrack productToTrack where productToTrack.user.login = ?#{principal.username}")
     List<ProductToTrack> findAllForCurrentUser();
 
+    List<ProductToTrack> findAllByName(String name);
 }

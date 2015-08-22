@@ -7,7 +7,7 @@
             <div class="form-group" style="width: 600px;">
                 <label for="productToTrackSelector" class="col-sm-6 control-label" translate="trackerApp.pricesEvolution.displayFor">Display prices evolutions for :</label>
                 <div class="col-sm-6">
-                    <select id="productToTrackSelector" class="form-control" ng-model="productToTrack" ng-options="productToTrack | product for productToTrack in productsToTrack" ng-change="loadGraphDataForProductToTrack(productToTrack)">
+                    <select id="productToTrackSelector" class="form-control" ng-model="productToTrack" ng-options="productToTrack | productWithoutStore for productToTrack in productsToTrack" ng-change="loadGraphDataForProductToTrack(productToTrack)">
                     </select>
                 </div>
             </div>
