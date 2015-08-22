@@ -8,7 +8,7 @@ import io.github.vdubois.tracker.repository.ProductToTrackRepository;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.joda.time.Days;
+import org.joda.time.Hours;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
  * Created by vdubois on 18/07/15.
  */
 @Service
+@Transactional
 @Log
 @EnableScheduling
 public class PriceService {
@@ -78,20 +80,21 @@ public class PriceService {
     public void refreshPrices() throws IOException {
         List<ProductToTrack> productsToTrack = productToTrackRepository.findAll();
         for (ProductToTrack productToTrack : productsToTrack) {
-            if (isLastKnownPriceOlderThanOneDayForProductToTrack(productToTrack)) {
+            if (isLastKnownPriceOlderThanThreeHoursForProductToTrack(productToTrack)) {
                 productToTrack.setLastKnownPrice(extractPriceFromURLWithDOMSelectorIfFilled(productToTrack));
+                productToTrackRepository.save(productsToTrack);
                 recordPriceForProductToTrack(productToTrack);
             }
         }
     }
 
-    private boolean isLastKnownPriceOlderThanOneDayForProductToTrack(ProductToTrack productToTrack) {
+    private boolean isLastKnownPriceOlderThanThreeHoursForProductToTrack(ProductToTrack productToTrack) {
         // we order prices by last date first
-        List<Price> prices = productToTrack.getPricess()
-                .stream().sorted(Comparator.comparing(Price::getCreatedAt)).collect(Collectors.toList());
+        List<Price> prices = productToTrackRepository.findOne(productToTrack.getId()).getPricess()
+                .stream().sorted(Comparator.comparing(Price::getCreatedAt).reversed()).collect(Collectors.toList());
         DateTime now = DateTime.now();
-        Days days = Days.daysBetween(prices.get(0).getCreatedAt(), now);
-        return days.getDays() >= 1;
+        Hours hours = Hours.hoursBetween(prices.get(0).getCreatedAt(), now);
+        return hours.getHours() >= 3;
     }
 
     public List<Point> findAllPricesEvolutionsForProductToTrack(ProductToTrack productToTrack) {

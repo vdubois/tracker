@@ -4,7 +4,7 @@ angular.module('trackerApp')
     .factory('MonitoringService', function ($rootScope, $http) {
         return {
             getMetrics: function () {
-                return $http.get('metrics/metrics').then(function (response) {
+                return $http.get('metrics').then(function (response) {
                     return response.data;
                 });
             },

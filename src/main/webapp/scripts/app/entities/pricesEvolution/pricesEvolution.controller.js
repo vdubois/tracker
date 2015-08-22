@@ -15,7 +15,8 @@ angular.module('trackerApp')
                     var firstPointDate = new Date(pricesEvolutionResult[0].date);
                     var data = pricesEvolutionResult.map(function (element) {
                         var pointDate = new Date(element.date);
-                        return [Date.UTC(pointDate.getFullYear(), pointDate.getMonth(), pointDate.getDate()), parseFloat(element.value, 10)];
+                        return [Date.UTC(pointDate.getFullYear(), pointDate.getMonth(), pointDate.getDate(), 
+                            pointDate.getHours(), pointDate.getMinutes(), pointDate.getSeconds()), parseFloat(element.value, 10)];
                     });
                     var months = [];
                     var resetZoom = '';

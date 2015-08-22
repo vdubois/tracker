@@ -104,7 +104,7 @@ public class MailService {
         sendEmail(user.getEmail(), subject, content, false, true);
     }
 
-    @Scheduled(cron = "0 30 0/12 * * *")
+    @Scheduled(cron = "0 30 * * * *")
     @Async
     public void sendPriceAlerts() {
         List<Alert> alerts = alertRepository.findAll();

@@ -3,8 +3,9 @@
 angular.module('trackerApp')
     .controller('AlertController', function ($scope, Alert, ProductToTrack, AlertSearch, ParseLinks) {
         $scope.alerts = [];
-        $scope.productsToTrack = ProductToTrack.query();
         $scope.page = 1;
+        $scope.alerts = [];
+        $scope.productsToTrack = ProductToTrack.query();
         $scope.loadAll = function() {
             Alert.query({page: $scope.page, per_page: 20}, function(result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
@@ -59,16 +60,6 @@ angular.module('trackerApp')
                     $('#deleteAlertConfirmation').modal('hide');
                     $scope.clear();
                 });
-        };
-
-        $scope.search = function () {
-            AlertSearch.query({query: $scope.searchQuery}, function(result) {
-                $scope.alerts = result;
-            }, function(response) {
-                if(response.status === 404) {
-                    $scope.loadAll();
-                }
-            });
         };
 
         $scope.refresh = function () {
