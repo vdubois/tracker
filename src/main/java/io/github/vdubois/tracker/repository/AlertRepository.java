@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface AlertRepository extends JpaRepository<Alert,Long> {
 
-    @Query("select alert from ALert alert where alert.user.login = ?#{principal.username}")
+    @Query("select alert from Alert alert where alert.user.login = ?#{principal.username}")
     List<Alert> findAllForCurrentUser();
 
     List<Alert> findAllByProductToTrack(ProductToTrack productToTrack);

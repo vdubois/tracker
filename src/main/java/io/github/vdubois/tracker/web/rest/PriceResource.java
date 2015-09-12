@@ -3,11 +3,8 @@ package io.github.vdubois.tracker.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.github.vdubois.tracker.domain.Price;
 import io.github.vdubois.tracker.repository.PriceRepository;
-import io.github.vdubois.tracker.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -76,12 +73,11 @@ public class PriceResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<List<Price>> getAll(@RequestParam(value = "page" , required = false) Integer offset,
-                                  @RequestParam(value = "per_page", required = false) Integer limit)
-        throws URISyntaxException {
-        Page<Price> page = priceRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/prices", offset, limit);
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    public ResponseEntity<List<Price>> getAll(@RequestParam(value = "page", required = false) Integer offset,
+                                              @RequestParam(value = "per_page", required = false) Integer limit)
+            throws URISyntaxException {
+        List<Price> prices = priceRepository.findAllForCurrentUser();
+        return new ResponseEntity<>(prices, HttpStatus.OK);
     }
 
     /**
