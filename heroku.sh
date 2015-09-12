@@ -1,5 +1,5 @@
 #!/bin/sh
-mvn3 install -Pprod -DskipTests
+mvn3 clean install -Pprod,fast -DskipTests
 heroku login
 heroku create --app vdubois-tracker-app
 heroku addons:create heroku-postgresql --app vdubois-tracker-app

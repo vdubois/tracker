@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing users.
@@ -49,8 +51,12 @@ public class UserResource {
     @Timed
     ResponseEntity<User> getUser(@PathVariable String login) {
         log.debug("REST request to get User : {}", login);
-        return userRepository.findOneByLogin(login)
-                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+        List<User> users = userRepository.findAllByLogin(login);
+        Optional<User> user = users
+                .stream()
+                .sorted(Comparator.comparing(User::getId))
+                .findFirst();
+        return user.map(userToMap -> new ResponseEntity<>(userToMap, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }
