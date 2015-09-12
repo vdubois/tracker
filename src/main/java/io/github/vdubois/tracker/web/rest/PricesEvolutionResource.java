@@ -30,7 +30,7 @@ public class PricesEvolutionResource {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public Map<String, List<Price>> find(@PathVariable String productToTrackName) {
-        return priceRepository.findAllForCurrentUser()
+        return priceRepository.findAll()
                 .stream()
                 .filter(price -> productToTrackName.equals(price.getProductToTrack().getName()))
                 .sorted(Comparator.comparing(Price::getCreatedAt))

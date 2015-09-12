@@ -7,7 +7,7 @@ angular.module('trackerApp')
                 parent: 'entity',
                 url: '/store',
                 data: {
-                    roles: ['ROLE_USER'],
+                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
                     pageTitle: 'trackerApp.store.home.title'
                 },
                 views: {

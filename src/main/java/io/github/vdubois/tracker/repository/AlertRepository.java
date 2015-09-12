@@ -12,8 +12,5 @@ import java.util.List;
  */
 public interface AlertRepository extends JpaRepository<Alert,Long> {
 
-    @Query("select alert from Alert alert where alert.productToTrack.user.login = ?#{principal.username}")
-    List<Alert> findAllForCurrentUser();
-
     List<Alert> findAllByProductToTrack(ProductToTrack productToTrack);
 }

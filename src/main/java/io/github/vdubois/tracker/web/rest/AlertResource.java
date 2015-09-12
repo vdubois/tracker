@@ -3,8 +3,11 @@ package io.github.vdubois.tracker.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.github.vdubois.tracker.domain.Alert;
 import io.github.vdubois.tracker.repository.AlertRepository;
+import io.github.vdubois.tracker.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -73,11 +76,12 @@ public class AlertResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<List<Alert>> getAll(@RequestParam(value = "page", required = false) Integer offset,
-                                              @RequestParam(value = "per_page", required = false) Integer limit)
-            throws URISyntaxException {
-        List<Alert> alerts = alertRepository.findAllForCurrentUser();
-        return new ResponseEntity<>(alerts, HttpStatus.OK);
+    public ResponseEntity<List<Alert>> getAll(@RequestParam(value = "page" , required = false) Integer offset,
+                                  @RequestParam(value = "per_page", required = false) Integer limit)
+        throws URISyntaxException {
+        Page<Alert> page = alertRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/alerts", offset, limit);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**

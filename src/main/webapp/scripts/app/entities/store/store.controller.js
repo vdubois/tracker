@@ -1,24 +1,31 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('StoreController', function ($scope, Store, User, StoreSearch, ParseLinks, ProductToTrack) {
+    .controller('StoreController', function ($scope, Store, User, StoreSearch, ParseLinks, ProductToTrack, Principal) {
         $scope.stores = [];
         $scope.users = User.query();
         $scope.page = 1;
+        $scope.currentUser = {};
         $scope.loadAll = function() {
-            Store.query({page: $scope.page, per_page: 20}, function(result, headers) {
-                $scope.links = ParseLinks.parse(headers('link'));
-                ProductToTrack.query().$promise.then(function (data) {
-                    $scope.productsToTrack = data;
-                    for (var i = 0; i < result.length; i++) {
-                        result[i].deletionDisabled = false;
-                        $scope.productsToTrack.forEach(function (element) {
-                            if (element.store.id === result[i].id) {
-                                result[i].deletionDisabled = true;
-                            }
-                        });
-                        $scope.stores.push(result[i]);
-                    }
+            Principal.identity().then(function (identityData) {
+                $scope.currentUser = identityData;
+                Store.query({page: $scope.page, per_page: 20}, function (result, headers) {
+                    $scope.links = ParseLinks.parse(headers('link'));
+                    result = result.filter(function (store) {
+                        return store.user.login === $scope.currentUser.login;
+                    });
+                    ProductToTrack.query().$promise.then(function (productToTrackData) {
+                        $scope.productsToTrack = productToTrackData;
+                        for (var i = 0; i < result.length; i++) {
+                            result[i].deletionDisabled = false;
+                            $scope.productsToTrack.forEach(function (element) {
+                                if (element.store.id === result[i].id) {
+                                    result[i].deletionDisabled = true;
+                                }
+                            });
+                            $scope.stores.push(result[i]);
+                        }
+                    });
                 });
             });
         };
