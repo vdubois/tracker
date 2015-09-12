@@ -2,19 +2,14 @@ package io.github.vdubois.tracker.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.github.vdubois.tracker.domain.Alert;
-import io.github.vdubois.tracker.domain.Price;
 import io.github.vdubois.tracker.domain.ProductToTrack;
 import io.github.vdubois.tracker.repository.AlertRepository;
-import io.github.vdubois.tracker.repository.PriceRepository;
 import io.github.vdubois.tracker.repository.ProductToTrackRepository;
 import io.github.vdubois.tracker.repository.StoreRepository;
 import io.github.vdubois.tracker.service.PriceService;
 import io.github.vdubois.tracker.service.UserService;
-import io.github.vdubois.tracker.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +28,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * REST controller for managing ProductToTrack.
@@ -113,9 +107,8 @@ public class ProductToTrackResource {
     public ResponseEntity<List<ProductToTrack>> getAll(@RequestParam(value = "page" , required = false) Integer offset,
                                   @RequestParam(value = "per_page", required = false) Integer limit)
         throws URISyntaxException {
-        Page<ProductToTrack> page = productToTrackRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/productToTracks", offset, limit);
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        List<ProductToTrack> products = productToTrackRepository.findAllForCurrentUser();
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     /**
