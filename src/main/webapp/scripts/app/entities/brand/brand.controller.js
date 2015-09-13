@@ -1,24 +1,31 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('BrandController', function ($scope, Brand, User, BrandSearch, ParseLinks, ProductToTrack) {
+    .controller('BrandController', function ($scope, Brand, User, BrandSearch, ParseLinks, ProductToTrack, Principal) {
         $scope.brands = [];
         $scope.users = User.query();
         $scope.page = 1;
+        $scope.currentUser = {};
         $scope.loadAll = function() {
-            Brand.query({page: $scope.page, per_page: 20}, function(result, headers) {
-                $scope.links = ParseLinks.parse(headers('link'));
-                ProductToTrack.query().$promise.then(function (data) {
-                    for (var i = 0; i < result.length; i++) {
-                        result[i].deletionDisabled = false;
-                        data.forEach(function (element) {
-                            if (element.brand.id === result[i].id) {
-                                result[i].deletionDisabled = true;
-                            }
-                        });
-                        $scope.brands.push(result[i]);
-                    }
+            Principal.identity().then(function (identityData) {
+                $scope.currentUser = identityData;
+                Brand.query({page: $scope.page, per_page: 20}, function(result, headers) {
+                    result = result.filter(function (brand) {
+                        return brand.user.login === $scope.currentUser.login;
+                    });
+                    $scope.links = ParseLinks.parse(headers('link'));
+                    ProductToTrack.query().$promise.then(function (data) {
+                        for (var i = 0; i < result.length; i++) {
+                            result[i].deletionDisabled = false;
+                            data.forEach(function (element) {
+                                if (element.brand.id === result[i].id) {
+                                    result[i].deletionDisabled = true;
+                                }
+                            });
+                            $scope.brands.push(result[i]);
+                        }
 
+                    });
                 });
             });
         };

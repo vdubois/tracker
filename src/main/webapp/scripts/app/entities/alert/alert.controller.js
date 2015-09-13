@@ -1,17 +1,28 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('AlertController', function ($scope, Alert, ProductToTrack, AlertSearch, ParseLinks) {
+    .controller('AlertController', function ($scope, Alert, ProductToTrack, AlertSearch, ParseLinks, Principal) {
         $scope.alerts = [];
         $scope.page = 1;
         $scope.alerts = [];
-        $scope.productsToTrack = ProductToTrack.query();
+        $scope.currentUser = {};
         $scope.loadAll = function() {
-            Alert.query({page: $scope.page, per_page: 20}, function(result, headers) {
-                $scope.links = ParseLinks.parse(headers('link'));
-                for (var i = 0; i < result.length; i++) {
-                    $scope.alerts.push(result[i]);
-                }
+            Principal.identity().then(function (identityData) {
+                $scope.currentUser = identityData;
+                ProductToTrack.query().$promise.then(function (productsToTrackData) {
+                    $scope.productsToTrack = productsToTrackData.filter(function (product) {
+                        return product.user.login === $scope.currentUser.login;
+                    });
+                });
+                Alert.query({page: $scope.page, per_page: 20}, function(result, headers) {
+                    result = result.filter(function (alert) {
+                        return alert.productToTrack.user.login === $scope.currentUser.login;
+                    });
+                    $scope.links = ParseLinks.parse(headers('link'));
+                    for (var i = 0; i < result.length; i++) {
+                        $scope.alerts.push(result[i]);
+                    }
+                });
             });
         };
         $scope.reset = function() {

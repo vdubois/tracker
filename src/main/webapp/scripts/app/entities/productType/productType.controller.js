@@ -1,24 +1,31 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('ProductTypeController', function ($scope, ProductType, User, ProductTypeSearch, ParseLinks, Account, ProductToTrack) {
+    .controller('ProductTypeController', function ($scope, ProductType, User, ProductTypeSearch, ParseLinks, Account, ProductToTrack, Principal) {
         $scope.productTypes = [];
         $scope.users = User.query();
         $scope.account = Account.get();
         $scope.page = 1;
+        $scope.currentUser = {};
         $scope.loadAll = function() {
-            ProductType.query({page: $scope.page, per_page: 20}, function(result, headers) {
-                $scope.links = ParseLinks.parse(headers('link'));
-                ProductToTrack.query().$promise.then(function (data) {
-                    for (var i = 0; i < result.length; i++) {
-                        result[i].deletionDisabled = false;
-                        data.forEach(function (element) {
-                            if (element.productType.id === result[i].id) {
-                                result[i].deletionDisabled = true;
-                            } 
-                        });
-                        $scope.productTypes.push(result[i]);
-                    }
+            Principal.identity().then(function (identityData) {
+                $scope.currentUser = identityData;
+                ProductType.query({page: $scope.page, per_page: 20}, function(result, headers) {
+                    result = result.filter(function (productType) {
+                        return productType.user.login === $scope.currentUser.login;
+                    });
+                    $scope.links = ParseLinks.parse(headers('link'));
+                    ProductToTrack.query().$promise.then(function (data) {
+                        for (var i = 0; i < result.length; i++) {
+                            result[i].deletionDisabled = false;
+                            data.forEach(function (element) {
+                                if (element.productType.id === result[i].id) {
+                                    result[i].deletionDisabled = true;
+                                }
+                            });
+                            $scope.productTypes.push(result[i]);
+                        }
+                    });
                 });
             });
         };

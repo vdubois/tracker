@@ -1,20 +1,27 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('PricesEvolutionController', function ($scope, PricesEvolution, ProductToTrack, $translate) {
+    .controller('PricesEvolutionController', function ($scope, PricesEvolution, ProductToTrack, $translate, Principal) {
 
         $scope.showChart = false;
-        
-        ProductToTrack.query(function (productToTrackResultData) {
-            var result = [];
-            var productsToTrackResult = [];
-            productToTrackResultData.forEach(function(item) {
-                if(result.indexOf(item.name) < 0) {
-                    result.push(item.name);
-                    productsToTrackResult.push(item);
-                }
+        $scope.currentUser = {};
+
+        Principal.identity().then(function (identityData) {
+            $scope.currentUser = identityData;
+            ProductToTrack.query(function (productToTrackResultData) {
+                productToTrackResultData = productToTrackResultData.filter(function (productToTrack) {
+                    return productToTrack.user.login === $scope.currentUser.login;
+                });
+                var result = [];
+                var productsToTrackResult = [];
+                productToTrackResultData.forEach(function(item) {
+                    if(result.indexOf(item.name) < 0) {
+                        result.push(item.name);
+                        productsToTrackResult.push(item);
+                    }
+                });
+                $scope.productsToTrack = productsToTrackResult;
             });
-            $scope.productsToTrack = productsToTrackResult;
         });
         
         $scope.loadGraphDataForProductToTrack = function (productToTrack) {

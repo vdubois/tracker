@@ -1,20 +1,38 @@
 'use strict';
 
 angular.module('trackerApp')
-    .controller('ProductToTrackController', function ($scope, ProductToTrack, User, ProductType, Brand, Store, Price, ProductToTrackSearch, ParseLinks, usSpinnerService) {
+    .controller('ProductToTrackController', function ($scope, ProductToTrack, User, ProductType, Brand, Store, Price, ProductToTrackSearch, ParseLinks, usSpinnerService, Principal) {
         $scope.productToTracks = [];
         $scope.users = User.query();
-        $scope.producttypes = ProductType.query();
-        $scope.brands = Brand.query();
-        $scope.stores = Store.query();
-        $scope.prices = Price.query();
+        ProductType.query().$promise.then(function (productTypeData) {
+            $scope.producttypes = productTypeData.filter(function (productType) {
+                return productType.user.login === $scope.currentUser.login;
+            });
+        });
+        Brand.query().$promise.then(function (brandsData) {
+            $scope.brands = brandsData.filter(function (brand) {
+                return brand.user.login === $scope.currentUser.login;
+            });
+        });
+        Store.query().$promise.then(function (storesData) {
+            $scope.stores = storesData.filter(function (store) {
+                return store.user.login === $scope.currentUser.login;
+            });
+        });
         $scope.page = 1;
+        $scope.currentUser = {};
         $scope.loadAll = function() {
-            ProductToTrack.query({page: $scope.page, per_page: 20}, function(result, headers) {
-                $scope.links = ParseLinks.parse(headers('link'));
-                for (var i = 0; i < result.length; i++) {
-                    $scope.productToTracks.push(result[i]);
-                }
+            Principal.identity().then(function (identityData) {
+                $scope.currentUser = identityData;
+                ProductToTrack.query({page: $scope.page, per_page: 20}, function(result, headers) {
+                    result = result.filter(function (productToTrack) {
+                        return productToTrack.user.login === $scope.currentUser.login;
+                    });
+                    $scope.links = ParseLinks.parse(headers('link'));
+                    for (var i = 0; i < result.length; i++) {
+                        $scope.productToTracks.push(result[i]);
+                    }
+                });
             });
         };
         $scope.reset = function() {
