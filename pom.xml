@@ -385,6 +385,11 @@
             <artifactId>htmlunit</artifactId>
             <version>2.15</version>
         </dependency>
+        <dependency>
+            <groupId>net.sourceforge.htmlcleaner</groupId>
+            <artifactId>htmlcleaner</artifactId>
+            <version>2.15</version>
+        </dependency>
     </dependencies>
     <build>
         <resources>

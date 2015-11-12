@@ -3,6 +3,8 @@ package io.github.vdubois.tracker.web.rest;
 import io.github.vdubois.tracker.Application;
 import io.github.vdubois.tracker.domain.ProductToTrack;
 import io.github.vdubois.tracker.repository.ProductToTrackRepository;
+import io.github.vdubois.tracker.service.PriceService;
+import io.github.vdubois.tracker.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,9 +47,9 @@ public class ProductToTrackResourceTest {
 
     private static final String DEFAULT_NAME = "SAMPLE_TEXT";
     private static final String UPDATED_NAME = "UPDATED_TEXT";
-    private static final String DEFAULT_TRACKING_URL = "SAMPLE_TEXT";
+    private static final String DEFAULT_TRACKING_URL = "http://villatech.fr/sauter-sfp-930-wf-1.html";
     private static final String UPDATED_TRACKING_URL = "UPDATED_TEXT";
-    private static final String DEFAULT_TRACKING_DOM_SELECTOR = "SAMPLE_TEXT";
+    private static final String DEFAULT_TRACKING_DOM_SELECTOR = "section.pricing div p.price";
     private static final String UPDATED_TRACKING_DOM_SELECTOR = "UPDATED_TEXT";
 
     private static final BigDecimal DEFAULT_LAST_KNOWN_PRICE = new BigDecimal(0);
@@ -56,6 +58,12 @@ public class ProductToTrackResourceTest {
     @Inject
     private ProductToTrackRepository productToTrackRepository;
 
+    @Inject
+    private PriceService priceService;
+
+    @Inject
+    private UserService userService;
+    
     private MockMvc restProductToTrackMockMvc;
 
     private ProductToTrack productToTrack;
@@ -65,6 +73,8 @@ public class ProductToTrackResourceTest {
         MockitoAnnotations.initMocks(this);
         ProductToTrackResource productToTrackResource = new ProductToTrackResource();
         ReflectionTestUtils.setField(productToTrackResource, "productToTrackRepository", productToTrackRepository);
+        ReflectionTestUtils.setField(productToTrackResource, "priceService", priceService);
+        ReflectionTestUtils.setField(productToTrackResource, "userService", userService);
         this.restProductToTrackMockMvc = MockMvcBuilders.standaloneSetup(productToTrackResource).build();
     }
 

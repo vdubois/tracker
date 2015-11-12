@@ -5,21 +5,31 @@ import io.github.vdubois.tracker.domain.ProductToTrack;
 import io.github.vdubois.tracker.repository.PriceRepository;
 import io.github.vdubois.tracker.repository.ProductToTrackRepository;
 import lombok.extern.java.Log;
-import org.apache.commons.lang3.StringUtils;
+import org.htmlcleaner.CleanerProperties;
+import org.htmlcleaner.DomSerializer;
+import org.htmlcleaner.HtmlCleaner;
+import org.htmlcleaner.TagNode;
 import org.joda.time.DateTime;
 import org.joda.time.Hours;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import javax.inject.Inject;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,22 +55,64 @@ public class PriceService {
      * @throws IOException exception d'entrée/sortie
      */
     public BigDecimal extractPriceFromURLWithDOMSelectorIfFilled(ProductToTrack productToTrack) throws IOException {
+        String productPageHTML = retrieveHTMLFromURL(productToTrack.getTrackingUrl());
+        org.w3c.dom.Document document = extractDocumentFromHTML(productPageHTML);
+        String price = findPricePyXPathInDocument(productToTrack.getTrackingDomSelector(), document);
+        return new BigDecimal(price.trim().replaceAll("&euro;", ".").replaceAll("€", "."));
+    }
+
+    /**
+     * @param xpathSelector xpath to find price node
+     * @param document document where to find price node
+     * @return price if found in document
+     * @throws IOException I/O exception
+     */
+    private String findPricePyXPathInDocument(String xpathSelector, Document document) throws IOException {
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        String price;
         try {
-            Document doc = Jsoup.connect(productToTrack.getTrackingUrl()).get();
-            String selector = productToTrack.getTrackingDomSelector();
-            if (StringUtils.isEmpty(selector)) {
-                selector = productToTrack.getStore().getBaseDomSelector();
+            NodeList nodes = (NodeList) xpath.evaluate(xpathSelector, document, XPathConstants.NODESET);
+            if (nodes.getLength() > 0) {
+                price = nodes.item(0).getTextContent();
+            } else {
+                throw new IOException("No node corresponding to xpath");
             }
-            Elements priceElements = doc.select(selector);
-            log.warning(priceElements.toString());
-            String priceAsText = priceElements.get(0).text();
-            log.warning(priceAsText);
-            priceAsText = priceAsText.replaceAll("€", ".");
-            return new BigDecimal(priceAsText);
-        } catch (Exception exception) {
-            log.severe(exception.getMessage());
-            throw exception;
+        } catch (XPathExpressionException xpathExpressionException) {
+            throw new IOException(xpathExpressionException.getMessage(), xpathExpressionException);
         }
+        return price;
+    }
+
+    /**
+     * @param productPageHTML HTML from product page
+     * @return Document from HTML
+     */
+    private Document extractDocumentFromHTML(String productPageHTML) {
+        TagNode tagNode = new HtmlCleaner().clean(productPageHTML);
+        Document document = null;
+        try {
+            document = new DomSerializer(new CleanerProperties()).createDOM(tagNode);
+        } catch (ParserConfigurationException parserConfigurationException) {
+            log.severe(parserConfigurationException.getMessage());
+        }
+        return document;
+    }
+
+    /**
+     * @param productToTrackURL product URL
+     * @return HTML from product page
+     * @throws IOException I/O exception
+     */
+    private String retrieveHTMLFromURL(String productToTrackURL) throws IOException {
+        URL productURL = new URL(productToTrackURL);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(productURL.openStream()));
+        String productPageHTML = "";
+        String productPageHTMLLine;
+        while ((productPageHTMLLine = bufferedReader.readLine()) != null) {
+            productPageHTML += productPageHTMLLine;
+        }
+        bufferedReader.close();
+        return productPageHTML;
     }
 
     /**
