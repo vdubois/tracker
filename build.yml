@@ -1,5 +1,5 @@
 build:
-  image: jdubois/jhispter-docker:latest
+  image: jdubois/jhipster-docker:latest
   working_dir: /home/jhipster/app
   volumes:
     - /var/jenkins_home/jobs/tracker/workspace:/home/jhipster/app
